@@ -62,6 +62,7 @@ export type UpperCases =
   | "Y"
   | "Z";
 export type Chars = LowerCases | UpperCases;
+export type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
 export type UpperToLowerMap = {
   A: "a";
   B: "b";
@@ -118,28 +119,12 @@ export type LowerToUpperMap = {
   y: "Y";
   z: "Z";
 };
-export type OneCharToLower<Char extends Chars> = Char extends UpperCases
-  ? UpperToLowerMap[Char]
-  : Char;
-export type ToLower<Str extends string> = Str extends Concat<
-  infer First,
-  infer Rest
->
-  ? First extends Chars
-    ? Concat<OneCharToLower<First>, ToLower<Rest>>
-    : Concat<First, ToLower<Rest>>
-  : EmptyString;
-export type OneCharToUpper<Char extends Chars> = Char extends LowerCases
+export type OneCharToLower<Char extends string> = Char extends UpperCases ? UpperToLowerMap[Char] : Char
+export type ToLower<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToLower<TakeFirst<Str>>, ToLower<TakeRest<Str>>>
+export type OneCharToUpper<Char extends string> = Char extends LowerCases
   ? LowerToUpperMap[Char]
   : Char;
-export type ToUpper<Str extends string> = Str extends Concat<
-  infer First,
-  infer Rest
->
-  ? First extends Chars
-    ? Concat<OneCharToUpper<First>, ToUpper<Rest>>
-    : Concat<First, ToUpper<Rest>>
-  : EmptyString;
+export type ToUpper<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToUpper<TakeFirst<Str>>, ToUpper<TakeRest<Str>>>
 export type TakeFirst<Str extends string> = Str extends Concat<
   infer First,
   string
@@ -160,23 +145,19 @@ export type ListChar<Str extends string> = Str extends Concat<
 >
   ? [One, ...ListChar<Rest>]
   : [];
-export type CutFirst<Arr> = Arr extends [any, ...infer Rest] ? Rest : [];
+export type CutFirst<Arr extends any[]> = Arr extends [any, ...infer Rest]
+  ? Rest
+  : [];
 export type Join<
   Arr extends string[],
   Delimiter extends string = EmptyString
-> = Arr extends [] | [infer T]
+> = Arr extends [] ? EmptyString :  Arr extends [infer T]
   ? T extends string
     ? T
-    : EmptyString
+    : never
   : TripleConcat<Arr[0], Delimiter, Join<CutFirst<Arr>, Delimiter>>;
-export type Title<Str extends string> = Str extends Concat<
-  infer First,
-  infer Rest
->
-  ? First extends Chars
-    ? Concat<OneCharToUpper<First>, Rest>
-    : EmptyString
-  : EmptyString;
+  
+export type Title<Str extends string> = Concat<ToUpper<TakeFirst<Str>>, TakeRest<Str>>
 export type Split<
   Str extends string,
   Splitter extends string
@@ -184,69 +165,48 @@ export type Split<
   ? [Head, ...Split<Tail, Splitter>]
   : [Str];
 
-type SplitByNonCharAndUpperWithTitleConvertFunc<
-  Target extends string[],
-  Buffer extends string[],
-  Source extends string
-> = Source extends EmptyString
-  ? [[...Target, Title<Join<Buffer>>], [], EmptyString]
-  : TakeFirst<Source> extends Chars
-  ? TakeFirst<Source> extends UpperCases
-    ? Buffer extends []
-      ? SplitByNonCharAndUpperWithTitleConvertFunc<
-          Target,
-          [TakeFirst<Source>],
-          TakeRest<Source>
-        >
-      : SplitByNonCharAndUpperWithTitleConvertFunc<
-          [...Target, Title<Join<Buffer>>],
-          [],
-          Source
-        >
-    : SplitByNonCharAndUpperWithTitleConvertFunc<
-        Target,
-        [...Buffer, TakeFirst<Source>],
-        TakeRest<Source>
-      >
-  : SplitByNonCharAndUpperWithTitleConvertFunc<
-      [...Target, Title<Join<Buffer>>],
-      [],
-      TakeRest<Source>
-    >;
+type TitleMapFn<Result extends string[], Arr extends string[]> = Arr extends [
+  string,
+  ...infer Rest
+]
+  ? Rest extends string[]
+    ? TitleMapFn<[...Result, Title<Arr[0]>], Rest>
+    : never
+  : [Result, []];
+type TitleMap<Arr extends string[]> = TitleMapFn<[], Arr>[0];
 
 export type PascalCase<Str extends string> = Join<
-  SplitByNonCharAndUpperWithTitleConvertFunc<[], [], Str>[0]
+  TitleMap<SplitFn<[], [], Str>[0]>
 >;
 
-export type SplitByNonCharAndUpperFunc<
-  Target extends string[],
+type _Expecting<Buffer extends string[]> = Buffer extends []
+  ? Chars | Digit
+  : Buffer[0] extends Chars
+  ? LowerCases
+  : Buffer[0] extends Digit
+  ? Digit
+  : never;
+
+type SplitFn<
+  Result extends string[],
   Buffer extends string[],
   Source extends string
 > = Source extends EmptyString
-  ? [[...Target, Join<Buffer>], [], EmptyString]
-  : TakeFirst<Source> extends Chars
-  ? TakeFirst<Source> extends UpperCases
-    ? Buffer extends []
-      ? SplitByNonCharAndUpperFunc<
-          Target,
-          [TakeFirst<Source>],
-          TakeRest<Source>
-        >
-      : SplitByNonCharAndUpperFunc<[...Target, Join<Buffer>], [], Source>
-    : SplitByNonCharAndUpperFunc<
-        Target,
-        [...Buffer, TakeFirst<Source>],
-        TakeRest<Source>
-      >
-  : SplitByNonCharAndUpperFunc<[...Target, Join<Buffer>], [], TakeRest<Source>>;
+  ? Chars | Digit extends _Expecting<Buffer> // Buffer is Empty
+    ? [Result, Buffer, EmptyString]
+    : [[...Result, Join<Buffer>], [], EmptyString]
+  : TakeFirst<Source> extends Chars | Digit
+  ? TakeFirst<Source> extends _Expecting<Buffer>
+    ? SplitFn<Result, [...Buffer, TakeFirst<Source>], TakeRest<Source>>
+    : SplitFn<[...Result, Join<Buffer>], [], Source>
+  : Chars | Digit extends _Expecting<Buffer> // Buffer is Empty
+  ? SplitFn<Result, Buffer, TakeRest<Source>>
+  : SplitFn<[...Result, Join<Buffer>], [], TakeRest<Source>>;
 
-export type PascalSplit<Str extends string> = SplitByNonCharAndUpperFunc<
-  [],
-  [],
-  Str
->[0];
+export type WordSplit<Str extends string> = SplitFn<[], [], Str>[0];
+
 export type SnakeCase<Str extends string> = ToLower<
-  Join<PascalSplit<Str>, Underline>
+  Join<WordSplit<Str>, Underline>
 >;
 
 export type SmallCamelCase<Str extends string> = Concat<
@@ -257,5 +217,5 @@ export type SmallCamelCase<Str extends string> = Concat<
 export type CamelCase<Str extends string> = SmallCamelCase<Str>;
 
 export type KebabCase<Str extends string> = ToLower<
-  Join<PascalSplit<Str>, Hyphen>
+  Join<WordSplit<Str>, Hyphen>
 >;
