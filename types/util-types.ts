@@ -40,3 +40,14 @@ export type WithoutKey<T, K extends keyof T> = Omit<T, K>;
 export type ArrayItem<Arr extends any[]> = Arr extends (infer T)[] ? T : never;
 export type Promisefy<T> = T extends Promise<any> ? T : Promise<T>;
 export type UnPromisefy<T> = T extends Promise<infer R> ? R : T;
+
+export type Callback<Params extends any[]> = (...args: Params) => void;
+export type Func<Params extends any[], Result> = (
+  ...args: Params
+) => Result;
+export type Mapper<In, Out> = (param: In) => Out;
+export type Predicate<T> = Mapper<T, boolean>;
+export type Method<This, Params extends any[], Result> = (
+  this: This,
+  ...args: Params
+) => Result;
