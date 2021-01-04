@@ -120,11 +120,11 @@ export type LowerToUpperMap = {
   z: "Z";
 };
 export type OneCharToLower<Char extends string> = Char extends UpperCases ? UpperToLowerMap[Char] : Char
-export type ToLower<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToLower<TakeFirst<Str>>, ToLower<TakeRest<Str>>>
+// export type Lowercase<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToLower<TakeFirst<Str>>, Lowercase<TakeRest<Str>>>
 export type OneCharToUpper<Char extends string> = Char extends LowerCases
   ? LowerToUpperMap[Char]
   : Char;
-export type ToUpper<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToUpper<TakeFirst<Str>>, ToUpper<TakeRest<Str>>>
+// export type Uppercase<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToUpper<TakeFirst<Str>>, Uppercase<TakeRest<Str>>>
 export type TakeFirst<Str extends string> = Str extends Concat<
   infer First,
   string
@@ -157,7 +157,7 @@ export type Join<
     : never
   : TripleConcat<Arr[0], Delimiter, Join<CutFirst<Arr>, Delimiter>>;
   
-export type Title<Str extends string> = Concat<ToUpper<TakeFirst<Str>>, TakeRest<Str>>
+export type Title<Str extends string> = Concat<Uppercase<TakeFirst<Str>>, TakeRest<Str>>
 export type Split<
   Str extends string,
   Splitter extends string
@@ -205,17 +205,17 @@ type SplitFn<
 
 export type WordSplit<Str extends string> = SplitFn<[], [], Str>[0];
 
-export type SnakeCase<Str extends string> = ToLower<
+export type SnakeCase<Str extends string> = Lowercase<
   Join<WordSplit<Str>, Underline>
 >;
 
 export type SmallCamelCase<Str extends string> = Concat<
-  ToLower<TakeFirst<Str>>,
+  Lowercase<TakeFirst<Str>>,
   TakeRest<PascalCase<Str>>
 >;
 
 export type CamelCase<Str extends string> = SmallCamelCase<Str>;
 
-export type KebabCase<Str extends string> = ToLower<
+export type KebabCase<Str extends string> = Lowercase<
   Join<WordSplit<Str>, Hyphen>
 >;
