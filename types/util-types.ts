@@ -31,6 +31,7 @@ export type ItemUnion<T> = keyof T extends infer K
     ? { [P in K]: T[K] }
     : never
   : never;
+export type TupleUnion<Arr extends any[]> = Arr extends [infer First, ...infer Rest] ? Union<First, TupleUnion<Rest>> : never;
 
 /**
  * Equal to Omit<T, K>, but with constraint that `K` must be key of `T`.
