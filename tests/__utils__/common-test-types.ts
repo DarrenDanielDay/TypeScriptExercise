@@ -16,10 +16,19 @@ export class SonClass extends FatherClass implements SonInterface {
   sonMethod(sonParam: string) {}
 }
 
-export type StringUnion = "foo" | "bar" | "baz";
+export type StringUnion = "Foo" | "Bar" | "Baz";
 
 export enum Enum {
   Foo,
   Bar,
   Baz,
+}
+
+export interface Foo {
+  a: string;
+  b: number;
+  prop?: {
+    c: string[];
+    d?: Promise<number>;
+  };  
 }

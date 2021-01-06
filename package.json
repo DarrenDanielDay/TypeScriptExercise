@@ -5,7 +5,10 @@
   "main": "main.ts",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node main.ts"
+    "start": "ts-node main.ts",
+    "test": "ts-node ./tests/main.ts",
+    "test:types": "yarn test types",
+    "test:runtime": "yarn test utils"
   },
   "dependencies": {
     "@types/node": "^14.14.10",
