@@ -3,7 +3,7 @@ import {
   SnakeCase,
   SmallCamelCase,
   KebabCase,
-} from "../types/string-convert";
+} from "../../src/types/string-convert";
 const AspNetCore1: PascalCase<"AspNetCore"> = "AspNetCore";
 const AspNetCore2: PascalCase<"asp_net_core"> = "AspNetCore";
 const AspNetCore3: PascalCase<"aspNetCore"> = "AspNetCore";
