@@ -5,13 +5,13 @@
   "tasks": [
     {
       "label": "ts-compile",
-        "type": "typescript",
-        "tsconfig": "tsconfig.json",
-        "problemMatcher": ["$tsc"],
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        }
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
       }
+    }
   ]
 }

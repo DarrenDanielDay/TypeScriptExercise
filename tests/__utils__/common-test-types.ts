@@ -30,5 +30,5 @@ export interface Foo {
   prop?: {
     c: string[];
     d?: Promise<number>;
-  };  
+  };
 }

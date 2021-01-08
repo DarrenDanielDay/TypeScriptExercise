@@ -50,12 +50,20 @@ StaticTypeCheck.assertThat<
   >
 >();
 
-function foo<T, P extends Partial<T>>(item: T, part: P): UtilTypes.PickOne<T, P> {
+function foo<T, P extends Partial<T>>(
+  item: T,
+  part: P
+): UtilTypes.PickOne<T, P> {
   return null as any;
 }
-type bar = UtilTypes.PickOne<CommonTestTypes.Foo, {
-  a : string
-}>;
+type bar = UtilTypes.PickOne<
+  CommonTestTypes.Foo,
+  {
+    a: string;
+  }
+>;
 // StaticTypeCheck.assertThat<>();
-const result = foo({a: 1, b: 2}, {a: 1});
-type E = UtilTypes.UnionToIntersection<Equal<{a: 1}, {a: 1}> | Equal<{b: 1}, {a: 1}>>
+const result = foo({ a: 1, b: 2 }, { a: 1 });
+type E = UtilTypes.UnionToIntersection<
+  Equal<{ a: 1 }, { a: 1 }> | Equal<{ b: 1 }, { a: 1 }>
+>;

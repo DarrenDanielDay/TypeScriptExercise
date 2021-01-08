@@ -1,4 +1,4 @@
 export interface IExtension {
-    install(): void;
-    uninstall(): void;
+  install(): void;
+  uninstall(): void;
 }

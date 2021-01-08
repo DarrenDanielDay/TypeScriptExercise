@@ -3,7 +3,9 @@ export type Inferior<A, B> = Superior<B, A>;
 export type Equal<A, B> = A extends B ? (B extends A ? true : false) : false;
 export type If<Cond extends boolean, A, B> = Cond extends true ? A : B;
 export type IfNot<Cond extends boolean, A, B> = Cond extends false ? A : B;
-export type IsRequired<T, K extends keyof T> = T extends Required<Pick<T, K>> ? true : false;
+export type IsRequired<T, K extends keyof T> = T extends Required<Pick<T, K>>
+  ? true
+  : false;
 export type Compare<A, B> = A extends B
   ? B extends A
     ? "Equal"
@@ -43,7 +45,9 @@ export type ItemUnion<T> = keyof T extends infer K
   : never;
 export type ExactlyOne<U, T> = UnionToIntersection<
   U extends infer Item ? Equal<Item, T> : never
-> extends true ? true : false;
+> extends true
+  ? true
+  : false;
 export type PickOne<T, Picked> = ExactlyOne<ItemUnion<T>, Picked>;
 export type TupleUnion<Arr extends any[]> = Arr extends [
   infer First,

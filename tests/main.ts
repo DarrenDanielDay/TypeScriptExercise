@@ -1,5 +1,5 @@
 const fs: typeof import("fs/promises") = require("fs").promises;
-const TEST_PATH = './tests/';
+const TEST_PATH = "./tests/";
 function toRequire(str: string) {
   return `./${str}`.replace(TEST_PATH, "./");
 }
@@ -31,8 +31,7 @@ async function testModule(requirePath: string) {
     } else {
       requireTheModule(toRequire(requirePath));
     }
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e);
   }
 }
@@ -45,12 +44,14 @@ async function main() {
     testModule(targetModule);
   } else {
     const moduleNames = await fs.readdir(TEST_PATH);
-    for (let moduleName of moduleNames.filter(moduleName => !/__.*__/.test(moduleName))) {
+    for (let moduleName of moduleNames.filter(
+      (moduleName) => !/__.*__/.test(moduleName)
+    )) {
       testModule(moduleName);
     }
   }
 }
 
 main().then(() => {
-  console.log('done!');
-})
+  console.log("done!");
+});

@@ -1,1 +1,1 @@
-export * as Extension from './extensions'
+export * as Extension from "./extensions";

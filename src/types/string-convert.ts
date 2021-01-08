@@ -122,11 +122,11 @@ export type LowerToUpperMap = {
 // export type OneCharToLower<Char extends string> = Char extends UpperCases ? UpperToLowerMap[Char] : Char;
 export type OneCharToLower<Char extends string> = Uncapitalize<Char>;
 // export type ToLower<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToLower<TakeFirst<Str>>, ToLower<TakeRest<Str>>>
-export type ToLower<Str extends string> = Lowercase<Str>
+export type ToLower<Str extends string> = Lowercase<Str>;
 // export type OneCharToUpper<Char extends string> = Char extends LowerCases ? LowerToUpperMap[Char] : Char;
 export type OneCharToUpper<Char extends string> = Capitalize<Char>;
 // export type ToUpper<Str extends string> = Str extends EmptyString ? EmptyString : Concat<OneCharToUpper<TakeFirst<Str>>, ToUpper<TakeRest<Str>>>
-export type ToUpper<Str extends string> = Uppercase<Str>
+export type ToUpper<Str extends string> = Uppercase<Str>;
 export type TakeFirst<Str extends string> = Str extends Concat<
   infer First,
   string
@@ -153,14 +153,16 @@ export type CutFirst<Arr extends any[]> = Arr extends [any, ...infer Rest]
 export type Join<
   Arr extends string[],
   Delimiter extends string = EmptyString
-> = Arr extends [] ? EmptyString :  Arr extends [infer T]
+> = Arr extends []
+  ? EmptyString
+  : Arr extends [infer T]
   ? T extends string
     ? T
     : never
   : TripleConcat<Arr[0], Delimiter, Join<CutFirst<Arr>, Delimiter>>;
-  
+
 // export type Title<Str extends string> = Concat<ToUpper<TakeFirst<Str>>, TakeRest<Str>>
-export type Title<Str extends string> = Capitalize<Str>
+export type Title<Str extends string> = Capitalize<Str>;
 // export type Untitle<Str extends string> = Concat<ToLower<TakeFirst<Str>>, TakeRest<Str>>
 export type Untitle<Str extends string> = Uncapitalize<Str>;
 export type Split<

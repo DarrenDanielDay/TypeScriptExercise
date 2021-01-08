@@ -1,18 +1,15 @@
 {
-    "compilerOptions": {
-        "esModuleInterop": true,
-        "allowJs": true,
-        "outDir": "dist",
-        "sourceMap": true,
-        "downlevelIteration": true,
-        "module": "CommonJS"
-    },
-    "include": [
-        "src",
-        "types"
-    ],
-    "ts-node": {
-        "logError": true,
-        "files": true
-    }
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowJs": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "downlevelIteration": true,
+    "module": "CommonJS"
+  },
+  "include": ["src", "types"],
+  "ts-node": {
+    "logError": true,
+    "files": true
+  }
 }

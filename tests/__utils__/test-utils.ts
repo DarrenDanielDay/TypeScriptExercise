@@ -5,5 +5,10 @@ export function echo<T>(obj: T): T {
   return obj;
 }
 
-export type Compare<A, B> = A extends B ? B extends A ? "Equal" : "Inferior" : B extends A ? "Superior" : "None";
-
+export type Compare<A, B> = A extends B
+  ? B extends A
+    ? "Equal"
+    : "Inferior"
+  : B extends A
+  ? "Superior"
+  : "None";
