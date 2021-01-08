@@ -2,9 +2,10 @@
 import { LinqExtension } from "./extensions/linq";
 import axios from "axios";
 import { pick } from "./utils/object-operations";
+import { StringExtension } from "./extensions/string";
 
 LinqExtension.install();
-
+StringExtension.install();
 const result = [1].select((i) => i.toFixed(2));
 for (let i of result) {
   console.log(i);
@@ -15,7 +16,7 @@ message;
 axios.get("https://www.baidu.com").then((v) => {
   console.log(v.data);
 });
-
+"abc".forEach(console.log);
 console.log(`Hello, ${message}!`);
-let a: GT = 2;
 LinqExtension.uninstall();
+StringExtension.uninstall();
