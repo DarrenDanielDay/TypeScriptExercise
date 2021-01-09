@@ -1,6 +1,7 @@
-import { Extension } from "../../interfaces";
+import { Extensions } from "../../interfaces";
 
-export const StringExtension: Extension.IExtension = {
+export const StringExtension: Extensions.IExtension = {
+  name: "string-utilsss",
   install() {
     String.prototype.forEach = function (
       callback: (character: string) => void

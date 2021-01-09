@@ -5,12 +5,32 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug main.ts",
+      "name": "Debug main.ts With Compile",
       "type": "node",
       "request": "launch",
       "preLaunchTask": "ts-compile",
       "program": "${workspaceRoot}/dist/main.js",
       "args": [],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    },
+    {
+      "name": "Debug main.ts No Compile",
+      "type": "node",
+      "request": "launch",
+      "args": ["src/main.ts", "-p", ".", "--file"],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    },
+    {
+      "name": "Current TS File",
+      "type": "node",
+      "request": "launch",
+      "args": ["${relativeFile}"],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
       "cwd": "${workspaceRoot}",
       "protocol": "inspector"
     }

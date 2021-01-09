@@ -5,6 +5,7 @@ Just for TypeScript learning and type exercise.
 ## Quick Start
 
 > NodeJS is required, and `yarn` is recommended.
+> If you use the lint tool, `python` is required.
 
 Run the following script:
 
