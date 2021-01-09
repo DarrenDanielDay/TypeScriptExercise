@@ -2,9 +2,13 @@ import { Mixins } from "../interfaces";
 import { rangeMixin } from "./builtins/range";
 export function injector(mixins: Mixins.IGlobalMixin[]) {
   const globalObject = getGlobal();
-  mixins.forEach((mixin) => {
-    Object.assign(globalObject, mixin.getMixins());
-  });
+  if (globalObject) {
+    mixins.forEach((mixin) => {
+      Object.assign(globalObject, mixin.getMixins());
+    });
+  } else {
+    throw new Error("cannot find global object");
+  }
 }
 
 export function getGlobal() {
