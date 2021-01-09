@@ -7,13 +7,14 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf ./dist ./node_modules",
-    "lint": "prettier --write .",
+    "format": "prettier --write .",
+    "lint": "prettier --check .",
     "start": "ts-node -p . --files",
-    "start:dev": "",
     "start:prod": "node ./dist/main.js",
     "test": "ts-node ./tests/main.ts",
     "test:types": "yarn test types",
-    "test:runtime": "yarn test utils"
+    "test:runtime": "yarn test utils",
+    "watch": "tsc -w"
   },
   "dependencies": {
     "axios": "^0.21.1"
