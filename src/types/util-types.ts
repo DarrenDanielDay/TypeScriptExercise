@@ -49,7 +49,7 @@ export type ExactlyOne<U, T> = UnionToIntersection<
   ? true
   : false;
 export type PickOne<T, Picked> = ExactlyOne<ItemUnion<T>, Picked>;
-export type TupleUnion<Arr extends any[]> = Arr extends [
+export type TupleUnion<Arr extends any[] | readonly any[]> = Arr extends [
   infer First,
   ...infer Rest
 ]
@@ -61,7 +61,48 @@ export type TupleUnion<Arr extends any[]> = Arr extends [
  */
 export type WithoutKey<T, K extends keyof T> = Omit<T, K>;
 
-export type ArrayItem<Arr extends any[]> = Arr extends (infer T)[] ? T : never;
+export type PrimitiveTypes =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | symbol
+  | bigint;
+
+export type ToPrimitive<T extends PrimitiveTypes> = T extends null
+  ? null
+  : T extends undefined
+  ? undefined
+  : T extends number
+  ? number
+  : T extends string
+  ? string
+  : T extends boolean
+  ? boolean
+  : T extends symbol
+  ? symbol
+  : T extends bigint
+  ? bigint
+  : T;
+export type DeepReadonly<T> = T extends PrimitiveTypes
+  ? T
+  : T extends any[]
+  ? Readonly<ArrayItem<T>[]>
+  : { readonly [K in keyof T]: DeepReadonly<T[K]> };
+
+export type Mutable<T> = T extends PrimitiveTypes
+  ? ToPrimitive<T>
+  : T extends [] | readonly []
+  ? any[]
+  : T extends any[] | readonly any[]
+  ? Mutable<ArrayItem<T>>[]
+  : { -readonly [K in keyof T]: Mutable<T[K]> };
+export type ArrayItem<Arr extends any[] | readonly any[]> = Arr extends
+  | (infer T)[]
+  | readonly (infer T)[]
+  ? T
+  : never;
 export type Promisefy<T> = T extends Promise<any> ? T : Promise<T>;
 export type UnPromisefy<T> = T extends Promise<infer R> ? R : T;
 

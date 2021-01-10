@@ -1,5 +1,5 @@
 import { UtilTypes } from "../../src/types";
-import { Equal } from "../../src/types/util-types";
+import { DeepReadonly, Equal } from "../../src/types/util-types";
 import { CommonTestTypes, CommonTestUtil, StaticTypeCheck } from "../__utils__";
 import { getType } from "../__utils__/test-utils";
 
@@ -62,8 +62,62 @@ type bar = UtilTypes.PickOne<
     a: string;
   }
 >;
-// StaticTypeCheck.assertThat<>();
-const result = foo({ a: 1, b: 2 }, { a: 1 });
-type E = UtilTypes.UnionToIntersection<
-  Equal<{ a: 1 }, { a: 1 }> | Equal<{ b: 1 }, { a: 1 }>
->;
+StaticTypeCheck.assertExpressionAssignable<true>(foo({ a: 1, b: 2 }, { a: 1 }));
+
+const constObject = {
+  a: [1, ""],
+  b: "asdf",
+  c: {
+    d: 123,
+    e: {
+      f: [],
+    },
+  },
+} as const;
+type constObjectT = typeof constObject;
+StaticTypeCheck.assertCompare<
+  UtilTypes.DeepReadonly<{
+    a: (string | number)[];
+    b: string;
+    c: { d: number; e: { f: number[] } };
+  }>,
+  constObjectT
+>("Superior");
+StaticTypeCheck.assertCompare<
+  UtilTypes.DeepReadonly<constObjectT>,
+  {
+    readonly a: readonly [1, ""];
+    readonly b: "asdf";
+    readonly c: {
+      readonly d: 123;
+      readonly e: {
+        readonly f: readonly [];
+      };
+    };
+  }
+>("Equal");
+type MT = UtilTypes.Mutable<constObjectT>;
+StaticTypeCheck.assertCompare<
+  MT,
+  {
+    a: (string | number)[];
+    b: string;
+    c: {
+      d: number;
+      e: {
+        f: any[];
+      };
+    };
+  }
+>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<string>, string>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<number>, number>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<null>, null>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<string>, string>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<readonly []>, any[]>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<[]>, any[]>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<readonly [1]>, number[]>(
+  "Equal"
+);
+type RA = readonly [1];
+type fooa = UtilTypes.ArrayItem<readonly [1]>;
