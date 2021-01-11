@@ -119,5 +119,18 @@ StaticTypeCheck.assertCompare<UtilTypes.Mutable<[]>, any[]>("Equal");
 StaticTypeCheck.assertCompare<UtilTypes.Mutable<readonly [1]>, number[]>(
   "Equal"
 );
-type RA = readonly [1];
-type fooa = UtilTypes.ArrayItem<readonly [1]>;
+
+type tuples = UtilTypes.TupleSlices<[string, number]>;
+StaticTypeCheck.assertExpressionAssignable<tuples>([""]);
+StaticTypeCheck.assertExpressionAssignable<tuples>(["", 1]);
+
+function partialParams<P extends tuples>(...args: P) {}
+
+partialParams("");
+partialParams("", 1);
+
+function withEmpty(...args: UtilTypes.TupleSlices<[string, number]>) {}
+// No hint in vscode.
+withEmpty();
+withEmpty("");
+withEmpty("", 1);

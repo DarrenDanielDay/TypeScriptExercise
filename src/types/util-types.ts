@@ -1,3 +1,5 @@
+import { first } from "lodash";
+
 export type Superior<A, B> = A extends B ? true : false;
 export type Inferior<A, B> = Superior<B, A>;
 export type Equal<A, B> = A extends B ? (B extends A ? true : false) : false;
@@ -55,7 +57,24 @@ export type TupleUnion<Arr extends any[] | readonly any[]> = Arr extends [
 ]
   ? Union<First, TupleUnion<Rest>>
   : never;
-
+export type MapTupleToPrimitives<
+  Arr extends any[] | readonly any[]
+> = Arr extends [] | readonly []
+  ? []
+  : Arr extends [infer First, ...infer Rest]
+  ? [
+      First extends PrimitiveTypes ? ToPrimitive<First> : First,
+      ...MapTupleToPrimitives<Rest>
+    ]
+  : never;
+export type TupleSlices<Arr extends any[] | readonly any[]> = Arr extends []
+  ? []
+  : Arr extends [infer First, ...infer Rest]
+  ? [] | [First, ...TupleSlices<Rest>]
+  : never;
+export type TupleSlicesss<Arr extends any[] | readonly any[]> =
+  | TupleSlices<Arr>
+  | [];
 /**
  * Equal to Omit<T, K>, but with constraint that `K` must be key of `T`.
  */
