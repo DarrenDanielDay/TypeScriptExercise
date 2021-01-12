@@ -332,6 +332,11 @@ concat-map@0.0.1:
   resolved "https://registry.npm.taobao.org/concat-map/download/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
+core-decorators@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.npm.taobao.org/core-decorators/download/core-decorators-0.20.0.tgz#605896624053af8c28efbe735c25a301a61c65c5"
+  integrity sha1-YFiWYkBTr4wo775zXCWjAaYcZcU=
+
 cosmiconfig@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npm.taobao.org/cosmiconfig/download/cosmiconfig-7.0.0.tgz#ef9b44d773959cae63ddecd122de23853b60f8d3"

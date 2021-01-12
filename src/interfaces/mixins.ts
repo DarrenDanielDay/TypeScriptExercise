@@ -1,3 +1,3 @@
 export interface IGlobalMixin {
-  getMixins(): any;
+  [variableName: string]: any;
 }

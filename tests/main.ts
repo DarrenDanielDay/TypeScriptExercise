@@ -55,3 +55,6 @@ async function main() {
 main().then(() => {
   console.log("done!");
 });
+
+// Convert this script to a module.
+export {};

@@ -1,7 +1,7 @@
 import { Mixins } from "../../interfaces";
-
+import { QuerySequence } from "../../extensions/linq";
 function* range(a: number, b?: number, c?: number): Iterable<number> {
-  const args = [a, b, c].filter((v) => typeof v === "number" || isNaN(v));
+  const args = [a, b, c].filter((v) => typeof v === "number");
   if (args.length === 1) {
     for (let i = 0; i < a; i++) {
       yield i;
@@ -32,9 +32,7 @@ function* range(a: number, b?: number, c?: number): Iterable<number> {
   throw new Error("Invalid parameter");
 }
 export const rangeMixin: Mixins.IGlobalMixin = {
-  getMixins() {
-    return {
-      range,
-    };
+  range(a: number, b?: number, c?: number) {
+    return new QuerySequence(range(a, b, c));
   },
 };

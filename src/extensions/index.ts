@@ -7,7 +7,7 @@ export class ExtensionInstaller {
       try {
         extension.install();
       } catch (e) {
-        throw new Error(`install plugin \`${extension.name}\` install failed`);
+        throw new Error(`install plugin: \`${extension.name}\` install failed`);
       }
     });
 
@@ -17,7 +17,7 @@ export class ExtensionInstaller {
         extension.uninstall();
       } catch (e) {
         throw new Error(
-          `install plugin \`${extension.name}\` uninstall failed`
+          `install plugin: \`${extension.name}\` uninstall failed`
         );
       }
     });
@@ -25,7 +25,7 @@ export class ExtensionInstaller {
   useScoped = async (callback: () => any) => {
     this.enableAll();
     const result = callback();
-    if (result?.then) {
+    if (result instanceof Promise) {
       await result;
     }
     this.disableAll();

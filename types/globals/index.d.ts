@@ -1,9 +1,11 @@
 import { Mixins } from "../../src/interfaces";
 
 declare global {
-  function range(end: number): Iterable<number>;
-  function range(begin: number, end: number): Iterable<number>;
-  function range(begin: number, end: number, step: number): Iterable<number>;
+  function range(end: number): QuerySequence<number>;
+  function range(begin: number, end: number): QuerySequence<number>;
+  function range(
+    begin: number,
+    end: number,
+    step: number
+  ): QuerySequence<number>;
 }
-
-export const injector: Mixins.IGlobalMixin;

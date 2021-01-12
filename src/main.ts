@@ -1,29 +1,40 @@
-// import './utils/linq'
 import { LinqExtension } from "./extensions/linq";
-import { injector } from "./globals";
 import axios from "axios";
 import { pick } from "./utils/object-operations";
 import { StringExtension } from "./extensions/string";
 import { ExtensionInstaller } from "./extensions";
 import { rangeMixin } from "./globals/builtins/range";
-injector([rangeMixin]);
+import { GlobalMixinManager } from "./globals";
+const manager = new GlobalMixinManager(rangeMixin);
+manager.inject();
 new ExtensionInstaller([StringExtension, LinqExtension]).useScoped(() => {
-  const result = [...range(10, 40, 2)];
+  const result = range(10, 40, 2);
   console.log(result);
-  // where(i => i % 3 === 0).toList().forEach(console.log)
+  result
+    .where((i) => i % 3 === 0)
+    .toList()
+    .forEach(console.log);
+  "abc".forEach(console.log);
 });
-LinqExtension.install();
+
+try {
+  "abc".forEach(console.log);
+} catch (e) {
+  console.log("Cannot use extension method when it's not installed.");
+  console.log(e);
+}
+
 StringExtension.install();
-// const result = [...range(3)].select((i) => i.toFixed(2));
-// for (let i of result) {
-//   console.log(i);
-// }
+"abc".forEach(console.log);
+StringExtension.uninstall();
+
 const foo = pick({ a: 1 }, "a");
+// The typescript syntax
 let message: string = "TypeScript Exercise";
+console.log(`Hello, ${message}!`);
+
+// Use third-party library
 axios.get("https://www.baidu.com").then((v) => {
   console.log(v.data);
 });
-"abc".forEach(console.log);
-console.log(`Hello, ${message}!`);
-LinqExtension.uninstall();
-StringExtension.uninstall();
+manager.remove();
