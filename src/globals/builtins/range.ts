@@ -1,5 +1,15 @@
+import { Linq } from "../../extensions";
 import { Mixins } from "../../interfaces";
-import { QuerySequence } from "../../extensions/linq";
+import { makeGlobalMixinManager } from "../../interfaces/mixins";
+declare global {
+  function range(end: number): Linq.QuerySequence<number>;
+  function range(begin: number, end: number): Linq.QuerySequence<number>;
+  function range(
+    begin: number,
+    end: number,
+    step: number
+  ): Linq.QuerySequence<number>;
+}
 function* range(a: number, b?: number, c?: number): Iterable<number> {
   const args = [a, b, c].filter((v) => typeof v === "number");
   if (args.length === 1) {
@@ -31,8 +41,8 @@ function* range(a: number, b?: number, c?: number): Iterable<number> {
   }
   throw new Error("Invalid parameter");
 }
-export const rangeMixin: Mixins.IGlobalMixin = {
+export const rangeMixin = makeGlobalMixinManager({
   range(a: number, b?: number, c?: number) {
-    return new QuerySequence(range(a, b, c));
+    return new Linq.QuerySequence(range(a, b, c));
   },
-};
+});

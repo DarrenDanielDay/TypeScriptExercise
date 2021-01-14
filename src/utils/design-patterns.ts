@@ -7,8 +7,8 @@ export class HubSwitch<
   T,
   OnKey extends UtilTypes.MethodKeys<T>,
   OffKey extends UtilTypes.MethodKeys<T>,
-  OnParams extends Parameters<T[OnKey]> & Iterable<any>,
-  OffParams extends Parameters<T[OffKey]> & Iterable<any>
+  OnParams extends Parameters<T[OnKey]>,
+  OffParams extends Parameters<T[OffKey]>
 > {
   constructor(
     public readonly targets: T[],

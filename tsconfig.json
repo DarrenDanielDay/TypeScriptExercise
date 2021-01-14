@@ -6,7 +6,9 @@
     "outDir": "dist",
     "sourceMap": true,
     "downlevelIteration": true,
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "target": "ES5",
+    "lib": ["DOM", "ESNext"]
   },
   "include": ["src", "types"],
   "ts-node": {

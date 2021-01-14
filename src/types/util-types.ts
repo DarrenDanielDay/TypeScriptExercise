@@ -24,7 +24,7 @@ export type UnionToIntersection<U> = (
   : never;
 
 export type KeyTypes = string | number | symbol;
-export type PropsKeys<T> = keyof T extends infer K
+export type PropertyKeys<T> = keyof T extends infer K
   ? K extends keyof T
     ? T[K] extends Function
       ? never
@@ -38,8 +38,11 @@ export type MethodKeys<T> = keyof T extends infer K
       : never
     : never
   : never;
-export type PropsOf<T> = Pick<T, PropsKeys<T>>;
-export type MethodsOf<T> = Pick<T, MethodKeys<T>>;
+export type PropertyPart<T> = Pick<T, PropertyKeys<T>>;
+export type MethodPart<T> = Pick<T, MethodKeys<T>>;
+export type ConstructorOf<T, Params extends any[] = any[]> = {
+  new (...args: Params): T;
+};
 export type ItemUnion<T> = keyof T extends infer K
   ? K extends keyof T
     ? Pick<T, K>
@@ -133,3 +136,6 @@ export type Method<This, Params extends any[], Result> = (
   this: This,
   ...args: Params
 ) => Result;
+export type MethodsOf<T> = {
+  [K in MethodKeys<T>]: Method<T, Parameters<T[K]>, ReturnType<T[K]>>;
+};

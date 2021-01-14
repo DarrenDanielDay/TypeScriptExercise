@@ -1,17 +1,24 @@
 import { Extensions } from "../../interfaces";
+import { makeMethodExtension } from "../../interfaces/extensions";
+import { UtilTypes } from "../../types";
 
-export const StringExtension: Extensions.IExtension = {
-  name: "string-utilsss",
-  install() {
-    String.prototype.forEach = function (
-      callback: (character: string) => void
-    ) {
+declare global {
+  interface String {
+    forEach(callback: UtilTypes.Callback<[string]>): void;
+  }
+}
+
+export const StringExtension: Extensions.IExtension<String> = makeMethodExtension<String>(
+  String,
+  {
+    forEach(callback) {
       for (const character of this) {
         callback(character);
       }
-    };
+    },
+    valueOf() {
+      return String.prototype.valueOf.call(this, arguments);
+    },
   },
-  uninstall() {
-    delete String.prototype.forEach;
-  },
-};
+  "string-foreach-ext"
+);

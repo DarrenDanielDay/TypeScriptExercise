@@ -1,5 +1,13 @@
+import { autobind } from "core-decorators";
 import { Extensions } from "../../interfaces";
+import { makeMethodExtension } from "../../interfaces/extensions";
 import { UtilTypes } from "../../types";
+declare global {
+  interface Array<T> {
+    select<R>(selector: UtilTypes.Func<[T], R>): QuerySequence<T>;
+    where(predicate: UtilTypes.Func<[T], boolean>): QuerySequence<T>;
+  }
+}
 
 function* select<T, R>(this: Iterable<T>, selector: UtilTypes.Mapper<T, R>) {
   for (let item of this) {
@@ -13,6 +21,7 @@ function* where<T>(this: Iterable<T>, predicate: UtilTypes.Predicate<T>) {
   }
 }
 
+@autobind
 export class QuerySequence<T> implements Iterable<T> {
   constructor(public readonly iterable: Iterable<T>) {}
   [Symbol.iterator]() {
@@ -28,27 +37,13 @@ export class QuerySequence<T> implements Iterable<T> {
     return [...this.iterable];
   }
 }
-export const LinqExtension: Extensions.IExtension = {
-  name: "linq",
-  install() {
-    Array.prototype.select = function <T, R>(
-      this: T[],
-      selector: UtilTypes.Mapper<T, R>
-    ) {
-      return new QuerySequence<T>(this).select(selector);
-    };
-
-    Array.prototype.where = function <T>(
-      this: T[],
-      predicate: UtilTypes.Predicate<T>
-    ) {
-      return new QuerySequence<T>(this).where(predicate);
-    };
-
-    Array.prototype;
+export const LinqExtension: Extensions.IExtension<
+  Array<any>
+> = makeMethodExtension(Array, {
+  select(selector) {
+    return new QuerySequence(this).select(selector);
   },
-  uninstall() {
-    delete Array.prototype.select;
-    delete Array.prototype.where;
+  where(predicate) {
+    return new QuerySequence(this).where(predicate);
   },
-};
+});
