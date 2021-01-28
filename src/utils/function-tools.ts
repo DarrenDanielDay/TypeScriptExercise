@@ -1,5 +1,33 @@
 import { UtilTypes } from "../types";
 
+export function promisefy<T>(obj: T): UtilTypes.Promisefy<T> {
+  return Promise.resolve(obj) as any;
+}
+
+export function asynchronize<Params extends any[], Result>(
+  fn: (...args: Params) => Result,
+  ...args: Params
+): UtilTypes.Promisefy<Result> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        const result = fn.apply(undefined, args);
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    }, 0);
+  }) as any;
+}
+
+export function wait(delay: number) {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
+
+export async function sleep(delay: number) {
+  await wait(delay * 1000);
+}
+
 export const $CurryLevel = Symbol.for("$CurryLevel");
 
 export interface Curry<Params extends any[], Result> {
@@ -33,7 +61,7 @@ export function currying<
   if (restCount(func) === args.length) {
     return func(...(args as any)) as any;
   }
-  const fn: Curry<any, any> = function (...argument) {
+  const fn: Curry<any, any> = function (...argument: unknown[]) {
     return func(...([...args, ...argument] as any));
   } as any;
   fn[$CurryLevel] = restCount(func) - args.length;
@@ -43,7 +71,7 @@ export function currying<
 }
 
 function restCount(fn: Curry<any, any> | UtilTypes.Func<any, any>) {
-  return fn[$CurryLevel] ?? fn.length;
+  return (fn as Curry<any, any>)[$CurryLevel] ?? fn.length;
 }
 
 export function callMethod<
@@ -64,4 +92,39 @@ export function hubCall<
   for (const target of targets) {
     callMethod(target, key, ...params);
   }
+}
+
+export type Pipe<Initial, Fns extends Function[]> = Fns extends [
+  infer First,
+  ...infer Last
+]
+  ? First extends (...args: infer P) => infer R
+    ? [Initial] extends P
+      ? Last extends Function[]
+        ? Pipe<R, [...Last]>
+        : never
+      : never
+    : never
+  : Initial;
+
+export function pipe<T, Params extends Function[]>(
+  init: T,
+  ...t: Params
+): Pipe<T, Params> {
+  let returnValue: unknown = init;
+  for (const fn of t) {
+    returnValue = fn.call(undefined, returnValue);
+  }
+  return returnValue as any;
+}
+
+export async function pipeAsync<T, Params extends Function[]>(
+  init: T,
+  ...t: Params
+): Promise<Pipe<T, Params>> {
+  let returnValue: unknown = init;
+  for (const fn of t) {
+    returnValue = await asynchronize(fn.bind(undefined, returnValue));
+  }
+  return returnValue as any;
 }

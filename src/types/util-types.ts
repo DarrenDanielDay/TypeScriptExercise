@@ -134,7 +134,7 @@ export type ArrayItem<Arr extends any[] | readonly any[]> = Arr extends
   ? T
   : never;
 export type Promisefy<T> = T extends Promise<any> ? T : Promise<T>;
-export type UnPromisefy<T> = T extends Promise<infer R> ? R : T;
+export type UnPromisefy<T> = T extends Promise<infer R> ? UnPromisefy<R> : T;
 
 export type Callback<Params extends any[]> = (...args: Params) => void;
 export type Func<Params extends any[], Result> = (...args: Params) => Result;

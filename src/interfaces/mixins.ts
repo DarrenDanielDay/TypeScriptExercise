@@ -39,14 +39,14 @@ export class GlobalMixinManager {
       if (variableName in this.global) {
         Internal.error(`Variable name '${variableName}' is already used.`);
       }
-      this.global[variableName] = value;
+      (this.global as any)[variableName] = value;
       this.keysToInject.add(variableName);
     }
   }
 
   remove() {
     this.keysToInject.forEach(
-      (variableName) => delete this.global[variableName]
+      (variableName) => delete (this.global as any)[variableName]
     );
     this.keysToInject.clear();
   }
