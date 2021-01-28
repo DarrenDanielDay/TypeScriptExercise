@@ -1,5 +1,4 @@
 import { UtilTypes } from "../../src/types";
-import { DeepReadonly, Equal } from "../../src/types/util-types";
 import { CommonTestTypes, CommonTestUtil, StaticTypeCheck } from "../__utils__";
 import { getType } from "../__utils__/test-utils";
 
@@ -134,3 +133,14 @@ function withEmpty(...args: UtilTypes.TupleSlices<[string, number]>) {}
 withEmpty();
 withEmpty("");
 withEmpty("", 1);
+
+StaticTypeCheck.assertCompare<UtilTypes.NotAny<number, string>, string>(
+  "Equal"
+);
+StaticTypeCheck.assertIsNever<UtilTypes.NotAny<any, string>>();
+StaticTypeCheck.assertIsNever<UtilTypes.NotAny<any, any>>();
+StaticTypeCheck.assertIsNever<UtilTypes.NoAny<any, any>>();
+StaticTypeCheck.assertIsNever<UtilTypes.NoAny<[number, any], number>>();
+StaticTypeCheck.assertCompare<UtilTypes.NoAny<[number], number>, number>(
+  "Equal"
+);

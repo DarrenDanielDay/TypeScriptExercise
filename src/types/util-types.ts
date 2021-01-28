@@ -23,6 +23,14 @@ export type UnionToIntersection<U> = (
   ? T
   : never;
 
+export type NotAny<Test, T> = If<Equal<Test, any>, never, T>;
+
+export type NoAny<Tests extends any[], T> = If<
+  Equal<ArrayItem<Tests>, any>,
+  never,
+  T
+>;
+
 export type KeyTypes = string | number | symbol;
 export type PropertyKeys<T> = keyof T extends infer K
   ? K extends keyof T
