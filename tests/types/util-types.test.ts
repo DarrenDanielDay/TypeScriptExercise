@@ -53,7 +53,7 @@ function foo<T, P extends Partial<T>>(
   item: T,
   part: P
 ): UtilTypes.PickOne<T, P> {
-  return null as any;
+  return null as never;
 }
 type bar = UtilTypes.PickOne<
   CommonTestTypes.Foo,
@@ -104,7 +104,7 @@ StaticTypeCheck.assertCompare<
     c: {
       d: number;
       e: {
-        f: any[];
+        f: unknown[];
       };
     };
   }
@@ -113,8 +113,10 @@ StaticTypeCheck.assertCompare<UtilTypes.Mutable<string>, string>("Equal");
 StaticTypeCheck.assertCompare<UtilTypes.Mutable<number>, number>("Equal");
 StaticTypeCheck.assertCompare<UtilTypes.Mutable<null>, null>("Equal");
 StaticTypeCheck.assertCompare<UtilTypes.Mutable<string>, string>("Equal");
-StaticTypeCheck.assertCompare<UtilTypes.Mutable<readonly []>, any[]>("Equal");
-StaticTypeCheck.assertCompare<UtilTypes.Mutable<[]>, any[]>("Equal");
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<readonly []>, unknown[]>(
+  "Equal"
+);
+StaticTypeCheck.assertCompare<UtilTypes.Mutable<[]>, unknown[]>("Equal");
 StaticTypeCheck.assertCompare<UtilTypes.Mutable<readonly [1]>, number[]>(
   "Equal"
 );

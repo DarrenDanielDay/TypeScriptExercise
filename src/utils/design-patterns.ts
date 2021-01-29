@@ -26,7 +26,7 @@ export class HubSwitch<
     Functools.hubCall(this.targets, this.offKey, ...this.offParams);
   }
 
-  async withSwitchOnScope(callback: (targets?: T[]) => any) {
+  async withSwitchOnScope(callback: (targets?: T[]) => unknown) {
     this.switchOn();
     const result = callback(this.targets);
     if (result instanceof Promise) {

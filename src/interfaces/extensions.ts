@@ -84,14 +84,14 @@ export function makeMethodExtension<T>(
 export class PropertyExtension<T> implements IExtension<T> {
   private readonly keys = new Set<string>();
   constructor(
-    public readonly target: UtilTypes.ConstructorOf<T, any[]>,
+    public readonly target: UtilTypes.ConstructorOf<T, unknown[]>,
     public readonly propertyMixin: PropertyMixin<T>,
     public readonly name: string = ""
   ) {
     this.name = name || `${target.name}--Extension`;
   }
   install(): void {
-    for (const [key, value] of Object.entries<any>(this.propertyMixin)) {
+    for (const [key, value] of Object.entries<unknown>(this.propertyMixin)) {
       if (this.keys.has(key)) {
         Internal.warn(
           `It seems you are reinstalling the extension ${this.name}`
@@ -122,6 +122,6 @@ export function makePropertyExtension<T>(
   return new PropertyExtension(target, mix, name);
 }
 
-export function useExtensions(extensions: IExtension<any>[]) {
+export function useExtensions(extensions: IExtension<unknown>[]) {
   return new HubSwitch(extensions, "install", "uninstall", [], []);
 }

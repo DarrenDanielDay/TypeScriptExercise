@@ -18,14 +18,15 @@ export type Compare<A, B> = A extends B
 export type Union<A, B> = A | B;
 export type Intersection<A, B> = A & B;
 export type UnionToIntersection<U> = (
-  U extends any ? (_: U) => void : never
+  U extends unknown ? (_: U) => void : never
 ) extends (_: infer T) => void
   ? T
   : never;
 
+export type SaferAny = Record<KeyTypes, unknown>;
 export type NotAny<Test, T> = If<Equal<Test, any>, never, T>;
 
-export type NoAny<Tests extends any[], T> = If<
+export type NoAny<Tests extends unknown[], T> = If<
   Equal<ArrayItem<Tests>, any>,
   never,
   T
@@ -48,7 +49,7 @@ export type MethodKeys<T> = keyof T extends infer K
   : never;
 export type PropertyPart<T> = Pick<T, PropertyKeys<T>>;
 export type MethodPart<T> = Pick<T, MethodKeys<T>>;
-export type ConstructorOf<T, Params extends any[] = any[]> = {
+export type ConstructorOf<T, Params extends unknown[] = unknown[]> = {
   new (...args: Params): T;
 };
 export type ItemUnion<T> = keyof T extends infer K
@@ -62,14 +63,13 @@ export type ExactlyOne<U, T> = UnionToIntersection<
   ? true
   : false;
 export type PickOne<T, Picked> = ExactlyOne<ItemUnion<T>, Picked>;
-export type TupleUnion<Arr extends any[] | readonly any[]> = Arr extends [
-  infer First,
-  ...infer Rest
-]
+export type TupleUnion<
+  Arr extends unknown[] | readonly unknown[]
+> = Arr extends [infer First, ...infer Rest]
   ? Union<First, TupleUnion<Rest>>
   : never;
 export type MapTupleToPrimitives<
-  Arr extends any[] | readonly any[]
+  Arr extends unknown[] | readonly unknown[]
 > = Arr extends [] | readonly []
   ? []
   : Arr extends [infer First, ...infer Rest]
@@ -78,12 +78,14 @@ export type MapTupleToPrimitives<
       ...MapTupleToPrimitives<Rest>
     ]
   : never;
-export type TupleSlices<Arr extends any[] | readonly any[]> = Arr extends []
+export type TupleSlices<
+  Arr extends unknown[] | readonly unknown[]
+> = Arr extends []
   ? []
   : Arr extends [infer First, ...infer Rest]
   ? [] | [First, ...TupleSlices<Rest>]
   : never;
-export type TupleSlicesss<Arr extends any[] | readonly any[]> =
+export type TupleSlicesss<Arr extends unknown[] | readonly unknown[]> =
   | TupleSlices<Arr>
   | [];
 /**
@@ -117,30 +119,32 @@ export type ToPrimitive<T extends PrimitiveTypes> = T extends null
   : T;
 export type DeepReadonly<T> = T extends PrimitiveTypes
   ? T
-  : T extends any[]
+  : T extends unknown[]
   ? Readonly<ArrayItem<T>[]>
   : { readonly [K in keyof T]: DeepReadonly<T[K]> };
 
 export type Mutable<T> = T extends PrimitiveTypes
   ? ToPrimitive<T>
   : T extends [] | readonly []
-  ? any[]
-  : T extends any[] | readonly any[]
+  ? unknown[]
+  : T extends unknown[] | readonly unknown[]
   ? Mutable<ArrayItem<T>>[]
   : { -readonly [K in keyof T]: Mutable<T[K]> };
-export type ArrayItem<Arr extends any[] | readonly any[]> = Arr extends
+export type ArrayItem<Arr extends unknown[] | readonly unknown[]> = Arr extends
   | (infer T)[]
   | readonly (infer T)[]
   ? T
   : never;
-export type Promisefy<T> = T extends Promise<any> ? T : Promise<T>;
+export type Promisefy<T> = T extends Promise<unknown> ? T : Promise<T>;
 export type UnPromisefy<T> = T extends Promise<infer R> ? UnPromisefy<R> : T;
 
-export type Callback<Params extends any[]> = (...args: Params) => void;
-export type Func<Params extends any[], Result> = (...args: Params) => Result;
+export type Callback<Params extends unknown[]> = (...args: Params) => void;
+export type Func<Params extends unknown[], Result> = (
+  ...args: Params
+) => Result;
 export type Mapper<In, Out> = (param: In) => Out;
 export type Predicate<T> = Mapper<T, boolean>;
-export type Method<This, Params extends any[], Result> = (
+export type Method<This, Params extends unknown[], Result> = (
   this: This,
   ...args: Params
 ) => Result;

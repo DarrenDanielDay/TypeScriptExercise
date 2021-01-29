@@ -1,10 +1,10 @@
 import { UtilTypes } from "../types";
 
 export function promisefy<T>(obj: T): UtilTypes.Promisefy<T> {
-  return Promise.resolve(obj) as any;
+  return Promise.resolve(obj) as never;
 }
 
-export function asynchronize<Params extends any[], Result>(
+export function asynchronize<Params extends unknown[], Result>(
   fn: (...args: Params) => Result,
   ...args: Params
 ): UtilTypes.Promisefy<Result> {
@@ -17,7 +17,7 @@ export function asynchronize<Params extends any[], Result>(
         reject(error);
       }
     }, 0);
-  }) as any;
+  }) as never;
 }
 
 export function wait(delay: number) {
@@ -30,7 +30,7 @@ export async function sleep(delay: number) {
 
 export const $CurryLevel = Symbol.for("$CurryLevel");
 
-export interface Curry<Params extends any[], Result> {
+export interface Curry<Params extends unknown[], Result> {
   <PassedParams extends UtilTypes.TupleSlices<Params>>(
     ...args: PassedParams
   ): Currying<Params, Result, PassedParams>;
@@ -38,7 +38,7 @@ export interface Curry<Params extends any[], Result> {
 }
 
 export type Currying<
-  Params extends any[],
+  Params extends unknown[],
   Result,
   PassedParams extends UtilTypes.TupleSlices<Params>
 > = PassedParams extends Params
@@ -51,7 +51,7 @@ export type Currying<
   : null;
 
 export function currying<
-  Params extends any[],
+  Params extends unknown[],
   Result,
   PassedParams extends UtilTypes.TupleSlices<Params>
 >(
@@ -59,25 +59,27 @@ export function currying<
   ...args: PassedParams
 ): Currying<Params, Result, PassedParams> {
   if (restCount(func) === args.length) {
-    return func(...(args as any)) as any;
+    return func(...(args as never)) as never;
   }
-  const fn: Curry<any, any> = function (...argument: unknown[]) {
-    return func(...([...args, ...argument] as any));
-  } as any;
+  const fn: Curry<unknown[], unknown> = function (...argument: unknown[]) {
+    return func(...([...args, ...argument] as never));
+  } as never;
   fn[$CurryLevel] = restCount(func) - args.length;
   return function curry() {
-    return currying<any, any, any>(fn, ...arguments);
-  } as any;
+    return currying.call(undefined, fn, ...arguments);
+  } as never;
 }
 
-function restCount(fn: Curry<any, any> | UtilTypes.Func<any, any>) {
-  return (fn as Curry<any, any>)[$CurryLevel] ?? fn.length;
+function restCount(
+  fn: Curry<unknown[], unknown> | UtilTypes.Func<unknown[], unknown>
+) {
+  return (fn as Curry<unknown[], unknown>)[$CurryLevel] ?? fn.length;
 }
 
 export function callMethod<
   T,
   K extends UtilTypes.MethodKeys<T>,
-  P extends Parameters<T[K]> & Iterable<any>
+  P extends Parameters<T[K]> & Iterable<unknown>
 >(target: T, key: K, ...params: P) {
   const method: UtilTypes.Method<typeof target, P, ReturnType<T[K]>> =
     target[key];
@@ -87,7 +89,7 @@ export function callMethod<
 export function hubCall<
   T,
   K extends UtilTypes.MethodKeys<T>,
-  P extends Parameters<T[K]> & Iterable<any>
+  P extends Parameters<T[K]> & Iterable<unknown>
 >(targets: Iterable<T>, key: K, ...params: P) {
   for (const target of targets) {
     callMethod(target, key, ...params);
@@ -115,7 +117,7 @@ export function pipe<T, Params extends Function[]>(
   for (const fn of t) {
     returnValue = fn.call(undefined, returnValue);
   }
-  return returnValue as any;
+  return returnValue as never;
 }
 
 export async function pipeAsync<T, Params extends Function[]>(
@@ -126,5 +128,5 @@ export async function pipeAsync<T, Params extends Function[]>(
   for (const fn of t) {
     returnValue = await asynchronize(fn.bind(undefined, returnValue));
   }
-  return returnValue as any;
+  return returnValue as never;
 }

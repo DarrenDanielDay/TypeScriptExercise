@@ -23,14 +23,14 @@ Functools.pipe(
   1,
   (a: number) => a.toFixed(2),
   (s: string) => s.split("."),
-  (arr: any[]) => arr.length
+  (arr: unknown[]) => arr.length
 ).toFixed();
 
 Functools.pipeAsync(
   1,
   (a: number) => a.toFixed(2),
   (s: string) => s.split("."),
-  (arr: any[]) => arr.length
+  (arr: unknown[]) => arr.length
 ).then((value) => {
   Internal.info("value", value);
 });

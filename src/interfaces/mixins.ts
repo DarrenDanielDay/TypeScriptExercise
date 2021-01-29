@@ -18,7 +18,7 @@ export type IGlobalMixin = Partial<PotentialGlobal>;
 
 // Original solution:
 // export interface IGlobalMixin {
-//   [variableName: string]: any
+//   [variableName: string]: unknown
 // }
 
 @autobind
@@ -39,14 +39,14 @@ export class GlobalMixinManager {
       if (variableName in this.global) {
         Internal.error(`Variable name '${variableName}' is already used.`);
       }
-      (this.global as any)[variableName] = value;
+      (this.global as UtilTypes.SaferAny)[variableName] = value;
       this.keysToInject.add(variableName);
     }
   }
 
   remove() {
     this.keysToInject.forEach(
-      (variableName) => delete (this.global as any)[variableName]
+      (variableName) => delete (this.global as UtilTypes.SaferAny)[variableName]
     );
     this.keysToInject.clear();
   }

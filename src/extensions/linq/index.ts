@@ -38,7 +38,7 @@ export class QuerySequence<T> implements Iterable<T> {
   }
 }
 export const LinqExtension: Extensions.IExtension<
-  Array<any>
+  Array<unknown>
 > = makeMethodExtension(Array, {
   select(selector) {
     return new QuerySequence(this).select(selector);

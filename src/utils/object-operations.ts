@@ -13,5 +13,5 @@ export function pick<T, Keys extends (keyof T)[]>(
   for (let key of keys) {
     result[key] = obj[key];
   }
-  return result as any;
+  return result as never;
 }

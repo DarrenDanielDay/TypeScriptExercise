@@ -147,7 +147,10 @@ export type ListChar<Str extends string> = Str extends Concat<
 >
   ? [One, ...ListChar<Rest>]
   : [];
-export type CutFirst<Arr extends any[]> = Arr extends [any, ...infer Rest]
+export type CutFirst<Arr extends unknown[]> = Arr extends [
+  unknown,
+  ...infer Rest
+]
   ? Rest
   : [];
 export type Join<

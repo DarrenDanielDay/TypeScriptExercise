@@ -1,10 +1,10 @@
 export type LoggingLevel = "INFO" | "WARN" | "ERROR" | "FATAL";
-export type LoggingMethod = (message: string, ...args: any[]) => void;
+export type LoggingMethod = (message: string, ...args: unknown[]) => void;
 export type ILogging = {
   [K in Lowercase<LoggingLevel>]: LoggingMethod;
 };
 
-export function log(level: LoggingLevel, message: string, ...args: any[]) {
+export function log(level: LoggingLevel, message: string, ...args: unknown[]) {
   const method: Record<LoggingLevel, LoggingMethod> = {
     INFO: console.log,
     WARN: console.warn,
