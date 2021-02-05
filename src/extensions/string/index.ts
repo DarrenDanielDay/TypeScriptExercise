@@ -1,10 +1,10 @@
 import { Extensions } from "../../interfaces";
 import { makeMethodExtension } from "../../interfaces/extensions";
-import { UtilTypes } from "../../types";
+import { Callback } from "../../types/util-types";
 
 declare global {
   interface String {
-    forEach(callback: UtilTypes.Callback<[string]>): void;
+    forEach(callback: Callback<[string]>): void;
   }
 }
 

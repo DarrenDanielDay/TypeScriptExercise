@@ -1,29 +1,31 @@
-import { UtilTypes } from "../../types";
+import {
+  AnyArray,
+  EmptyTuple,
+  ArrayItem,
+  TupleTail,
+} from "../../types/util-types";
 
-export type Product<Sequences extends UtilTypes.AnyArray[]> = _Product<
-  [],
-  Sequences
->;
+export type Product<Sequences extends AnyArray[]> = _Product<[], Sequences>;
 
 type _Product<
-  WalkedSeq extends UtilTypes.AnyArray,
-  RestSequences extends UtilTypes.AnyArray[]
-> = RestSequences extends UtilTypes.EmptyTuple
+  WalkedSeq extends AnyArray,
+  RestSequences extends AnyArray[]
+> = RestSequences extends EmptyTuple
   ? WalkedSeq
   : RestSequences extends [infer NextSequence, ...infer NextRestSequence]
-  ? NextSequence extends UtilTypes.AnyArray
-    ? NextRestSequence extends UtilTypes.AnyArray[]
+  ? NextSequence extends AnyArray
+    ? NextRestSequence extends AnyArray[]
       ? _ProductMap<WalkedSeq, [], NextSequence, NextRestSequence>
       : never
     : never
   : never;
 
 type _ProductMap<
-  WalkedSeq extends UtilTypes.AnyArray,
-  AccumulatedResult extends UtilTypes.AnyArray,
-  RestItems extends UtilTypes.AnyArray,
-  RestSequences extends UtilTypes.AnyArray[]
-> = RestItems extends UtilTypes.EmptyTuple
+  WalkedSeq extends AnyArray,
+  AccumulatedResult extends AnyArray,
+  RestItems extends AnyArray,
+  RestSequences extends AnyArray[]
+> = RestItems extends EmptyTuple
   ? AccumulatedResult
   : RestItems extends [infer NextItem, ...infer NextRestItems]
   ? _ProductMap<
@@ -36,13 +38,33 @@ type _ProductMap<
       WalkedSeq,
       [
         ...AccumulatedResult,
-        ...[...WalkedSeq, UtilTypes.ArrayItem<RestItems>][]
+        ..._Product<[...WalkedSeq, ArrayItem<RestItems>], RestSequences>[]
       ],
       [],
       RestSequences
     >;
 
-export function product<Params extends UtilTypes.AnyArray[]>(
+export type KeyBasedProduct<Sequences extends AnyArray[]> = _KeyProduct<
+  [],
+  Sequences[0],
+  TupleTail<Sequences>
+>;
+
+type _KeyProduct<
+  Item extends AnyArray,
+  NextSequence,
+  RestSequences extends AnyArray
+> = {
+  [K in keyof NextSequence]: RestSequences extends EmptyTuple
+    ? [...Item, NextSequence[K]]
+    : _KeyProduct<
+        [...Item, NextSequence[K]],
+        RestSequences[0],
+        TupleTail<RestSequences>
+      >;
+};
+
+export function product<Params extends AnyArray[]>(
   ...args: Params
 ): Product<Params> {
   const walkedSeq: unknown[] = [];
@@ -60,19 +82,17 @@ export function product<Params extends UtilTypes.AnyArray[]>(
   }
   return _product() as never;
 }
-export type ProductItem<
-  Arrs extends UtilTypes.AnyArray[]
-> = Arrs extends UtilTypes.EmptyTuple
-  ? UtilTypes.EmptyTuple
+export type ProductItem<Arrs extends AnyArray[]> = Arrs extends EmptyTuple
+  ? EmptyTuple
   : Arrs extends [infer FirstArr, ...infer RestArr]
-  ? FirstArr extends UtilTypes.AnyArray
-    ? RestArr extends UtilTypes.AnyArray[]
-      ? [UtilTypes.ArrayItem<FirstArr>, ...ProductItem<RestArr>]
+  ? FirstArr extends AnyArray
+    ? RestArr extends AnyArray[]
+      ? [ArrayItem<FirstArr>, ...ProductItem<RestArr>]
       : never
     : never
-  : UtilTypes.ArrayItem<Arrs>[];
+  : ArrayItem<Arrs>[];
 
-export function* productIterator<Params extends UtilTypes.AnyArray[]>(
+export function* productIterator<Params extends AnyArray[]>(
   ...args: Params
 ): Generator<ProductItem<Params>, void, void> {
   if (!args.length || args.some((arg) => arg.length === 0)) return;

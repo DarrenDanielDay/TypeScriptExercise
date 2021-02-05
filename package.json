@@ -8,6 +8,7 @@
     "build": "tsc",
     "clean": "ts-node ./scripts/clean.ts",
     "format": "prettier --write .",
+    "gene:test-files": "ts-node ./scripts/gene-test-files.ts",
     "lint": "prettier --check .",
     "start": "ts-node -p . --files",
     "start:prod": "node ./dist/main.js",

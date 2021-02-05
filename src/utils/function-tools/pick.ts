@@ -1,14 +1,9 @@
-import { UtilTypes } from "../../types";
+import { TupleUnion } from "../../types/util-types";
 
 export function pick<T, Keys extends (keyof T)[]>(
   obj: T,
   ...keys: Keys
-): Pick<
-  T,
-  UtilTypes.TupleUnion<Keys> extends keyof T
-    ? UtilTypes.TupleUnion<Keys>
-    : never
-> {
+): Pick<T, TupleUnion<Keys> extends keyof T ? TupleUnion<Keys> : never> {
   const result: Partial<T> = {};
   for (let key of keys) {
     result[key] = obj[key];

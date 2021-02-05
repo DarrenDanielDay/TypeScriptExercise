@@ -1,17 +1,17 @@
 import { autobind } from "core-decorators";
 import { Internal } from "..";
-import { UtilTypes } from "../types";
+import { ConstructorOf, MethodsOf, PropertyKeys } from "../types/util-types";
 import { HubSwitch } from "../utils/design-patterns";
 
 export interface IExtension<T> {
-  target: UtilTypes.ConstructorOf<T>;
+  target: ConstructorOf<T>;
   name: string;
   install(): void;
   uninstall(): void;
 }
 
-export type MethodMixin<T> = Partial<UtilTypes.MethodsOf<T>>;
-export type PropertyMixin<T> = Pick<T, UtilTypes.PropertyKeys<T>>;
+export type MethodMixin<T> = Partial<MethodsOf<T>>;
+export type PropertyMixin<T> = Pick<T, PropertyKeys<T>>;
 
 @autobind
 export class MethodExtension<T> implements IExtension<T> {
@@ -20,7 +20,7 @@ export class MethodExtension<T> implements IExtension<T> {
     /**
      * The constructor
      */
-    public readonly target: UtilTypes.ConstructorOf<T>,
+    public readonly target: ConstructorOf<T>,
     /**
      * The method mixin object, which contains the methods.
      */
@@ -73,7 +73,7 @@ export class MethodExtension<T> implements IExtension<T> {
 }
 
 export function makeMethodExtension<T>(
-  constructor: UtilTypes.ConstructorOf<T>,
+  constructor: ConstructorOf<T>,
   ext: MethodMixin<T>,
   name?: string
 ) {
@@ -84,7 +84,7 @@ export function makeMethodExtension<T>(
 export class PropertyExtension<T> implements IExtension<T> {
   private readonly keys = new Set<string>();
   constructor(
-    public readonly target: UtilTypes.ConstructorOf<T, unknown[]>,
+    public readonly target: ConstructorOf<T, unknown[]>,
     public readonly propertyMixin: PropertyMixin<T>,
     public readonly name: string = ""
   ) {
@@ -115,7 +115,7 @@ export class PropertyExtension<T> implements IExtension<T> {
 }
 
 export function makePropertyExtension<T>(
-  target: UtilTypes.ConstructorOf<T>,
+  target: ConstructorOf<T>,
   mix: PropertyMixin<T>,
   name?: string
 ) {

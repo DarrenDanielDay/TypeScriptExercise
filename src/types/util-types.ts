@@ -26,7 +26,7 @@ export type EmptyTuple = readonly [];
 export type SaferAny = Record<KeyTypes, unknown>;
 export type NotAny<Test, T> = If<Equal<Test, any>, never, T>;
 
-export type NoAny<Tests extends unknown[], T> = If<
+export type NoAny<Tests extends AnyArray, T> = If<
   Equal<ArrayItem<Tests>, any>,
   never,
   T
@@ -49,7 +49,7 @@ export type MethodKeys<T> = keyof T extends infer K
   : never;
 export type PropertyPart<T> = Pick<T, PropertyKeys<T>>;
 export type MethodPart<T> = Pick<T, MethodKeys<T>>;
-export type ConstructorOf<T, Params extends unknown[] = unknown[]> = {
+export type ConstructorOf<T, Params extends AnyArray = AnyArray> = {
   new (...args: Params): T;
 };
 export type ItemUnion<T> = keyof T extends infer K
@@ -63,47 +63,37 @@ export type ExactlyOne<U, T> = UnionToIntersection<
   ? true
   : false;
 export type PickOne<T, Picked> = ExactlyOne<ItemUnion<T>, Picked>;
-export type TupleUnion<
-  Arr extends unknown[] | readonly unknown[]
-> = Arr extends [infer First, ...infer Rest]
+export type TupleHead<Tuple extends AnyArray> = Tuple extends [
+  infer First,
+  ...AnyArray
+]
+  ? First
+  : never;
+export type TupleTail<Tuple extends AnyArray> = Tuple extends [
+  unknown,
+  ...infer Tail
+]
+  ? Tail
+  : never;
+export type TupleUnion<Arr extends AnyArray> = Arr extends [
+  infer First,
+  ...infer Rest
+]
   ? Union<First, TupleUnion<Rest>>
   : never;
-export type MapTupleToPrimitives<
-  Arr extends unknown[] | readonly unknown[]
-> = Arr extends [] | readonly []
-  ? []
+export type MapTupleToPrimitives<Arr extends AnyArray> = Arr extends EmptyTuple
+  ? EmptyTuple
   : Arr extends [infer First, ...infer Rest]
   ? [
       First extends PrimitiveTypes ? ToPrimitive<First> : First,
       ...MapTupleToPrimitives<Rest>
     ]
   : never;
-export type TupleSlices<Arr extends readonly unknown[]> = Arr extends readonly [
-
-]
+export type TupleSlices<Arr extends AnyArray> = Arr extends EmptyTuple
   ? []
   : Arr extends readonly [infer First, ...infer Rest]
   ? [] | [First, ...TupleSlices<Rest>]
   : never;
-export type TupleSlicesss<Arr extends readonly unknown[]> =
-  | TupleSlices<Arr>
-  | [];
-
-type ProductOneFn<
-  A extends AnyArray,
-  Producted extends readonly AnyArray[],
-  Rest extends AnyArray
-> = Rest extends EmptyTuple
-  ? Producted
-  : Rest extends [infer First, ...infer Rest]
-  ? ProductOneFn<A, [...Producted, [...A, First]], Rest>
-  : [...A, ArrayItem<Rest>][];
-
-export type ProductOne<A extends AnyArray, B extends AnyArray> = ProductOneFn<
-  A,
-  [],
-  B
->;
 
 export type WithoutKey<T, K extends keyof T> = Omit<T, K>;
 
@@ -133,32 +123,28 @@ export type ToPrimitive<T extends PrimitiveTypes> = T extends null
   : T;
 export type DeepReadonly<T> = T extends PrimitiveTypes
   ? T
-  : T extends unknown[]
-  ? Readonly<ArrayItem<T>[]>
+  : T extends AnyArray
+  ? readonly ArrayItem<T>[]
   : { readonly [K in keyof T]: DeepReadonly<T[K]> };
 
 export type Mutable<T> = T extends PrimitiveTypes
   ? ToPrimitive<T>
-  : T extends readonly []
-  ? unknown[]
-  : T extends readonly unknown[]
+  : T extends EmptyTuple
+  ? AnyArray
+  : T extends AnyArray
   ? Mutable<ArrayItem<T>>[]
   : { -readonly [K in keyof T]: Mutable<T[K]> };
-export type ArrayItem<Arr extends readonly unknown[]> = Arr extends
-  | (infer T)[]
-  | readonly (infer T)[]
+export type ArrayItem<Arr extends AnyArray> = Arr extends readonly (infer T)[]
   ? T
   : never;
 export type Promisefy<T> = T extends Promise<unknown> ? T : Promise<T>;
 export type UnPromisefy<T> = T extends Promise<infer R> ? UnPromisefy<R> : T;
 
-export type Callback<Params extends unknown[]> = (...args: Params) => void;
-export type Func<Params extends unknown[], Result> = (
-  ...args: Params
-) => Result;
+export type Callback<Params extends AnyArray> = (...args: Params) => void;
+export type Func<Params extends AnyArray, Result> = (...args: Params) => Result;
 export type Mapper<In, Out> = (param: In) => Out;
 export type Predicate<T> = Mapper<T, boolean>;
-export type Method<This, Params extends unknown[], Result> = (
+export type Method<This, Params extends AnyArray, Result> = (
   this: This,
   ...args: Params
 ) => Result;

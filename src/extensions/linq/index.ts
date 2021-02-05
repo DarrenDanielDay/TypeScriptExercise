@@ -1,21 +1,22 @@
 import { autobind } from "core-decorators";
 import { Extensions } from "../../interfaces";
 import { makeMethodExtension } from "../../interfaces/extensions";
-import { UtilTypes } from "../../types";
+import {} from "../../types";
+import { Func, Mapper, Predicate } from "../../types/util-types";
 declare global {
   interface Array<T> {
-    select<R>(selector: UtilTypes.Func<[T], R>): QuerySequence<T>;
-    where(predicate: UtilTypes.Func<[T], boolean>): QuerySequence<T>;
+    select<R>(selector: Func<[T], R>): QuerySequence<T>;
+    where(predicate: Func<[T], boolean>): QuerySequence<T>;
   }
 }
 
-function* select<T, R>(this: Iterable<T>, selector: UtilTypes.Mapper<T, R>) {
+function* select<T, R>(this: Iterable<T>, selector: Mapper<T, R>) {
   for (let item of this) {
     yield selector(item);
   }
 }
 
-function* where<T>(this: Iterable<T>, predicate: UtilTypes.Predicate<T>) {
+function* where<T>(this: Iterable<T>, predicate: Predicate<T>) {
   for (let item of this) {
     predicate(item) && (yield item);
   }
@@ -27,12 +28,12 @@ export class QuerySequence<T> implements Iterable<T> {
   [Symbol.iterator]() {
     return this.iterable[Symbol.iterator]();
   }
-  select<R>(selector: UtilTypes.Mapper<T, R>) {
+  select<R>(selector: Mapper<T, R>) {
     return new QuerySequence<R>(
       select.call(this.iterable, selector as never) as never
     );
   }
-  where(predicate: UtilTypes.Predicate<T>) {
+  where(predicate: Predicate<T>) {
     return new QuerySequence<T>(
       where.call(this.iterable, predicate as never) as never
     );

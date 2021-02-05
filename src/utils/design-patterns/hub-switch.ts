@@ -1,12 +1,12 @@
 import { autobind } from "core-decorators";
 import { Functools } from "..";
-import { UtilTypes } from "../../types";
+import { MethodKeys } from "../../types/util-types";
 
 @autobind
 export class HubSwitch<
   T,
-  OnKey extends UtilTypes.MethodKeys<T>,
-  OffKey extends UtilTypes.MethodKeys<T>,
+  OnKey extends MethodKeys<T>,
+  OffKey extends MethodKeys<T>,
   OnParams extends Parameters<T[OnKey]>,
   OffParams extends Parameters<T[OffKey]>
 > {

@@ -1,33 +1,36 @@
-import { UtilTypes } from "../../types";
+import {
+  Func,
+  MapTupleToPrimitives,
+  TupleSlices,
+} from "../../types/util-types";
 
 export const $CurryLevel = Symbol.for("$CurryLevel");
 
 export interface Curry<Params extends unknown[], Result> {
-  <PassedParams extends UtilTypes.TupleSlices<Params>>(
-    ...args: PassedParams
-  ): Currying<Params, Result, PassedParams>;
+  <PassedParams extends TupleSlices<Params>>(...args: PassedParams): Currying<
+    Params,
+    Result,
+    PassedParams
+  >;
   [$CurryLevel]: number;
 }
 
 export type Currying<
   Params extends unknown[],
   Result,
-  PassedParams extends UtilTypes.TupleSlices<Params>
+  PassedParams extends TupleSlices<Params>
 > = PassedParams extends Params
   ? Result
-  : Params extends [
-      ...UtilTypes.MapTupleToPrimitives<PassedParams>,
-      ...infer RestParams
-    ]
+  : Params extends [...MapTupleToPrimitives<PassedParams>, ...infer RestParams]
   ? Curry<RestParams, Result>
   : null;
 
 export function currying<
   Params extends unknown[],
   Result,
-  PassedParams extends UtilTypes.TupleSlices<Params>
+  PassedParams extends TupleSlices<Params>
 >(
-  func: UtilTypes.Func<Params, Result>,
+  func: Func<Params, Result>,
   ...args: PassedParams
 ): Currying<Params, Result, PassedParams> {
   if (restCount(func as never) === args.length) {
@@ -42,8 +45,6 @@ export function currying<
   } as never;
 }
 
-function restCount(
-  fn: Curry<unknown[], unknown> | UtilTypes.Func<unknown[], unknown>
-) {
+function restCount(fn: Curry<unknown[], unknown> | Func<unknown[], unknown>) {
   return (fn as Curry<unknown[], unknown>)[$CurryLevel] ?? fn.length;
 }

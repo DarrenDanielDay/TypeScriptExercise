@@ -1,8 +1,8 @@
 import { Internal } from "../..";
-import { UtilTypes } from "../../types";
+import { Func } from "../../types/util-types";
 
 export const timer = (
-  callback: UtilTypes.Func<unknown[], unknown>,
+  callback: Func<unknown[], unknown>,
   ...args: unknown[]
 ) => {
   const start = new Date();

@@ -19,7 +19,7 @@
     "lib": ["DOM", "ES2019"]
   },
   "include": ["src", "types"],
-
+  "exclude": ["**/playground.*"],
   "ts-node": {
     "logError": true,
     "files": true
