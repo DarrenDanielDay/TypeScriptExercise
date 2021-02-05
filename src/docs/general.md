@@ -11,3 +11,9 @@ The father module is responsible for naming its child module, like
 ```ts
 export * as ChildModuleName from "./child-module-folder-name";
 ```
+
+If the module's implementation falls into several parts of files, the folder should export its names:
+
+```ts
+export * from "./some-implement-file.ts";
+```

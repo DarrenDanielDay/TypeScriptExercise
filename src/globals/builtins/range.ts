@@ -1,6 +1,6 @@
 import { Linq } from "../../extensions";
-import { Mixins } from "../../interfaces";
 import { makeGlobalMixinManager } from "../../interfaces/mixins";
+import { isNumber } from "../../utils/function-tools/type-guards";
 declare global {
   function range(end: number): Linq.QuerySequence<number>;
   function range(begin: number, end: number): Linq.QuerySequence<number>;
@@ -11,7 +11,8 @@ declare global {
   ): Linq.QuerySequence<number>;
 }
 function* range(a: number, b?: number, c?: number): Iterable<number> {
-  const args = [a, b, c].filter((v) => typeof v === "number");
+  const args = [a, b, c].filter(isNumber);
+  (b = b!), (c = c!);
   if (args.length === 1) {
     for (let i = 0; i < a; i++) {
       yield i;

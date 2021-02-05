@@ -36,7 +36,7 @@ export class MethodExtension<T> implements IExtension<T> {
   install() {
     const extensionName = this.name;
     for (const [methodName, methodFunc] of Object.entries<Function>(
-      this.methodMixin
+      this.methodMixin as never
     )) {
       if (this.keys.has(methodName)) {
         Internal.warn(

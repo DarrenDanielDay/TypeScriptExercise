@@ -1,6 +1,5 @@
 import { LinqExtension } from "./extensions/linq";
 import axios from "axios";
-import { pick } from "./utils/object-operations";
 import { StringExtension } from "./extensions/string";
 import { rangeMixin } from "./globals/builtins/range";
 import { useGlobalMixins } from "./interfaces/mixins";

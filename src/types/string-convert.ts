@@ -186,7 +186,7 @@ type TitleMapFn<Result extends string[], Arr extends string[]> = Arr extends [
 type TitleMap<Arr extends string[]> = TitleMapFn<[], Arr>[0];
 
 export type PascalCase<Str extends string> = Join<
-  TitleMap<SplitFn<[], [], Str>[0]>
+  TitleMap<SplitFn<[], [], Str>>
 >;
 
 type _Expecting<Buffer extends string[]> = Buffer extends []
@@ -203,8 +203,8 @@ type SplitFn<
   Source extends string
 > = Source extends EmptyString
   ? Chars | Digit extends _Expecting<Buffer> // Buffer is Empty
-    ? [Result, Buffer, EmptyString]
-    : [[...Result, Join<Buffer>], [], EmptyString]
+    ? Result
+    : [...Result, Join<Buffer>]
   : TakeFirst<Source> extends Chars | Digit
   ? TakeFirst<Source> extends _Expecting<Buffer>
     ? SplitFn<Result, [...Buffer, TakeFirst<Source>], TakeRest<Source>>
@@ -213,7 +213,7 @@ type SplitFn<
   ? SplitFn<Result, Buffer, TakeRest<Source>>
   : SplitFn<[...Result, Join<Buffer>], [], TakeRest<Source>>;
 
-export type WordSplit<Str extends string> = SplitFn<[], [], Str>[0];
+export type WordSplit<Str extends string> = SplitFn<[], [], Str>;
 
 export type SnakeCase<Str extends string> = ToLower<
   Join<WordSplit<Str>, Underline>

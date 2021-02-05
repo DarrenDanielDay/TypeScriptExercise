@@ -17,7 +17,7 @@ export const StringExtension: Extensions.IExtension<String> = makeMethodExtensio
       }
     },
     valueOf() {
-      return String.prototype.valueOf.call(this, arguments);
+      return String.prototype.valueOf.apply(this, (arguments as unknown) as []);
     },
   },
   "string-foreach-ext"

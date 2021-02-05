@@ -1,6 +1,6 @@
 import { autobind } from "core-decorators";
-import { Functools } from ".";
-import { UtilTypes } from "../types";
+import { Functools } from "..";
+import { UtilTypes } from "../../types";
 
 @autobind
 export class HubSwitch<

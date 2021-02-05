@@ -1,2 +1,2 @@
-export * as Builtins from "./object-operations";
 export * as Functools from "./function-tools";
+export * as Algorithms from "./algorithms";

@@ -28,10 +28,14 @@ export class QuerySequence<T> implements Iterable<T> {
     return this.iterable[Symbol.iterator]();
   }
   select<R>(selector: UtilTypes.Mapper<T, R>) {
-    return new QuerySequence<R>(select.call(this.iterable, selector));
+    return new QuerySequence<R>(
+      select.call(this.iterable, selector as never) as never
+    );
   }
   where(predicate: UtilTypes.Predicate<T>) {
-    return new QuerySequence<T>(where.call(this.iterable, predicate));
+    return new QuerySequence<T>(
+      where.call(this.iterable, predicate as never) as never
+    );
   }
   toList() {
     return [...this.iterable];

@@ -1,5 +1,3 @@
-import { first } from "lodash";
-
 export type Superior<A, B> = A extends B ? true : false;
 export type Inferior<A, B> = Superior<B, A>;
 export type Equal<A, B> = A extends B ? (B extends A ? true : false) : false;
@@ -23,6 +21,8 @@ export type UnionToIntersection<U> = (
   ? T
   : never;
 
+export type AnyArray = readonly unknown[];
+export type EmptyTuple = readonly [];
 export type SaferAny = Record<KeyTypes, unknown>;
 export type NotAny<Test, T> = If<Equal<Test, any>, never, T>;
 
@@ -78,19 +78,33 @@ export type MapTupleToPrimitives<
       ...MapTupleToPrimitives<Rest>
     ]
   : never;
-export type TupleSlices<
-  Arr extends unknown[] | readonly unknown[]
-> = Arr extends []
+export type TupleSlices<Arr extends readonly unknown[]> = Arr extends readonly [
+
+]
   ? []
-  : Arr extends [infer First, ...infer Rest]
+  : Arr extends readonly [infer First, ...infer Rest]
   ? [] | [First, ...TupleSlices<Rest>]
   : never;
-export type TupleSlicesss<Arr extends unknown[] | readonly unknown[]> =
+export type TupleSlicesss<Arr extends readonly unknown[]> =
   | TupleSlices<Arr>
   | [];
-/**
- * Equal to Omit<T, K>, but with constraint that `K` must be key of `T`.
- */
+
+type ProductOneFn<
+  A extends AnyArray,
+  Producted extends readonly AnyArray[],
+  Rest extends AnyArray
+> = Rest extends EmptyTuple
+  ? Producted
+  : Rest extends [infer First, ...infer Rest]
+  ? ProductOneFn<A, [...Producted, [...A, First]], Rest>
+  : [...A, ArrayItem<Rest>][];
+
+export type ProductOne<A extends AnyArray, B extends AnyArray> = ProductOneFn<
+  A,
+  [],
+  B
+>;
+
 export type WithoutKey<T, K extends keyof T> = Omit<T, K>;
 
 export type PrimitiveTypes =
@@ -125,12 +139,12 @@ export type DeepReadonly<T> = T extends PrimitiveTypes
 
 export type Mutable<T> = T extends PrimitiveTypes
   ? ToPrimitive<T>
-  : T extends [] | readonly []
+  : T extends readonly []
   ? unknown[]
-  : T extends unknown[] | readonly unknown[]
+  : T extends readonly unknown[]
   ? Mutable<ArrayItem<T>>[]
   : { -readonly [K in keyof T]: Mutable<T[K]> };
-export type ArrayItem<Arr extends unknown[] | readonly unknown[]> = Arr extends
+export type ArrayItem<Arr extends readonly unknown[]> = Arr extends
   | (infer T)[]
   | readonly (infer T)[]
   ? T

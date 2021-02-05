@@ -3,6 +3,11 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
+    "noStrictGenericChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowJs": true,
@@ -11,9 +16,10 @@
     "downlevelIteration": true,
     "module": "CommonJS",
     "target": "ESNext",
-    "lib": ["DOM", "ESNext"]
+    "lib": ["DOM", "ES2019"]
   },
   "include": ["src", "types"],
+
   "ts-node": {
     "logError": true,
     "files": true

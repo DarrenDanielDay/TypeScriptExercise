@@ -23,10 +23,14 @@ export type IGlobalMixin = Partial<PotentialGlobal>;
 
 @autobind
 export class GlobalMixinManager {
-  private global: typeof globalThis;
-  private keysToInject: Set<string>;
+  private global!: PotentialGlobal;
+  private keysToInject!: Set<string>;
   constructor(public readonly mixin: Mixins.IGlobalMixin) {
-    this.global = getGlobal();
+    const globalObj = getGlobal();
+    if (!globalObj) {
+      return Internal.error("");
+    }
+    this.global = globalObj;
     this.keysToInject = new Set(Object.keys(mixin));
   }
 
@@ -39,14 +43,15 @@ export class GlobalMixinManager {
       if (variableName in this.global) {
         Internal.error(`Variable name '${variableName}' is already used.`);
       }
-      (this.global as UtilTypes.SaferAny)[variableName] = value;
+      ((this.global as unknown) as UtilTypes.SaferAny)[variableName] = value;
       this.keysToInject.add(variableName);
     }
   }
 
   remove() {
     this.keysToInject.forEach(
-      (variableName) => delete (this.global as UtilTypes.SaferAny)[variableName]
+      (variableName) =>
+        delete ((this.global as unknown) as UtilTypes.SaferAny)[variableName]
     );
     this.keysToInject.clear();
   }

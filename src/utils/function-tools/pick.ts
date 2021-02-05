@@ -1,4 +1,4 @@
-import { UtilTypes } from "../types";
+import { UtilTypes } from "../../types";
 
 export function pick<T, Keys extends (keyof T)[]>(
   obj: T,
