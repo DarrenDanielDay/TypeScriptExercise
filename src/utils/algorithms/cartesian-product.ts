@@ -5,16 +5,22 @@ import {
   TupleTail,
 } from "../../types/util-types";
 
-export type Product<Sequences extends AnyArray[]> = _Product<[], Sequences>;
+export type Product<Sequences extends readonly AnyArray[]> = _Product<
+  [],
+  Sequences
+>;
 
 type _Product<
   WalkedSeq extends AnyArray,
-  RestSequences extends AnyArray[]
+  RestSequences extends readonly AnyArray[]
 > = RestSequences extends EmptyTuple
   ? WalkedSeq
-  : RestSequences extends [infer NextSequence, ...infer NextRestSequence]
+  : RestSequences extends readonly [
+      infer NextSequence,
+      ...infer NextRestSequence
+    ]
   ? NextSequence extends AnyArray
-    ? NextRestSequence extends AnyArray[]
+    ? NextRestSequence extends readonly AnyArray[]
       ? _ProductMap<WalkedSeq, [], NextSequence, NextRestSequence>
       : never
     : never
@@ -24,10 +30,10 @@ type _ProductMap<
   WalkedSeq extends AnyArray,
   AccumulatedResult extends AnyArray,
   RestItems extends AnyArray,
-  RestSequences extends AnyArray[]
+  RestSequences extends readonly AnyArray[]
 > = RestItems extends EmptyTuple
   ? AccumulatedResult
-  : RestItems extends [infer NextItem, ...infer NextRestItems]
+  : RestItems extends readonly [infer NextItem, ...infer NextRestItems]
   ? _ProductMap<
       WalkedSeq,
       [...AccumulatedResult, _Product<[...WalkedSeq, NextItem], RestSequences>],
@@ -44,11 +50,9 @@ type _ProductMap<
       RestSequences
     >;
 
-export type KeyBasedProduct<Sequences extends AnyArray[]> = _KeyProduct<
-  [],
-  Sequences[0],
-  TupleTail<Sequences>
->;
+export type KeyBasedProduct<
+  Sequences extends readonly AnyArray[]
+> = _KeyProduct<[], Sequences[0], TupleTail<Sequences>>;
 
 type _KeyProduct<
   Item extends AnyArray,
@@ -82,17 +86,19 @@ export function product<Params extends AnyArray[]>(
   }
   return _product() as never;
 }
-export type ProductItem<Arrs extends AnyArray[]> = Arrs extends EmptyTuple
+export type ProductItem<
+  Arrs extends readonly AnyArray[]
+> = Arrs extends EmptyTuple
   ? EmptyTuple
-  : Arrs extends [infer FirstArr, ...infer RestArr]
+  : Arrs extends readonly [infer FirstArr, ...infer RestArr]
   ? FirstArr extends AnyArray
-    ? RestArr extends AnyArray[]
+    ? RestArr extends readonly AnyArray[]
       ? [ArrayItem<FirstArr>, ...ProductItem<RestArr>]
       : never
     : never
   : ArrayItem<Arrs>[];
 
-export function* productIterator<Params extends AnyArray[]>(
+export function* productIterator<Params extends readonly AnyArray[]>(
   ...args: Params
 ): Generator<ProductItem<Params>, void, void> {
   if (!args.length || args.some((arg) => arg.length === 0)) return;

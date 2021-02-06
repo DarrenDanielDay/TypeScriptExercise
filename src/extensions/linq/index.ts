@@ -1,7 +1,6 @@
 import { autobind } from "core-decorators";
 import { Extensions } from "../../interfaces";
 import { makeMethodExtension } from "../../interfaces/extensions";
-import {} from "../../types";
 import { Func, Mapper, Predicate } from "../../types/util-types";
 declare global {
   interface Array<T> {
