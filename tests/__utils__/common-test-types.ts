@@ -7,12 +7,12 @@ export interface SonInterface extends FatherInterface {
 }
 
 export class FatherClass implements FatherInterface {
-  father: number;
+  father!: number;
   fatherMethod(fatherParam: number) {}
 }
 
 export class SonClass extends FatherClass implements SonInterface {
-  son: string;
+  son!: string;
   sonMethod(sonParam: string) {}
 }
 

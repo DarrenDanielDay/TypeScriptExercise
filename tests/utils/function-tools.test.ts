@@ -4,6 +4,7 @@ function fn(a: number, b: string, c: null) {
   return {
     a,
     b,
+    c,
   };
 }
 let result = Functools.currying(fn, 1)("", null).a;

@@ -1,5 +1,5 @@
 export function getType<T>(): T {
-  return null;
+  return null as never;
 }
 export function echo<T>(obj: T): T {
   return obj;

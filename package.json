@@ -12,7 +12,7 @@
     "lint": "prettier --check .",
     "start": "ts-node -p . --files",
     "start:prod": "node ./dist/main.js",
-    "test": "ts-node ./tests/main.ts",
+    "test": "ts-node -O \"{ \\\"noUnusedLocals\\\":false, \\\"noUnusedParameters\\\":false }\" ./tests/main.ts",
     "test:types": "yarn test types",
     "test:runtime": "yarn test utils",
     "watch": "tsc -w"

@@ -124,13 +124,13 @@ export type ToPrimitive<T extends PrimitiveTypes> = T extends null
 export type DeepReadonly<T> = T extends PrimitiveTypes
   ? T
   : T extends AnyArray
-  ? readonly ArrayItem<T>[]
+  ? Readonly<T>
   : { readonly [K in keyof T]: DeepReadonly<T[K]> };
 
 export type Mutable<T> = T extends PrimitiveTypes
   ? ToPrimitive<T>
   : T extends EmptyTuple
-  ? AnyArray
+  ? unknown[]
   : T extends AnyArray
   ? Mutable<ArrayItem<T>>[]
   : { -readonly [K in keyof T]: Mutable<T[K]> };
