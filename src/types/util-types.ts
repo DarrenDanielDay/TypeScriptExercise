@@ -33,6 +33,7 @@ export type NoAny<Tests extends AnyArray, T> = If<
 >;
 
 export type KeyTypes = string | number | symbol;
+export type SelectKey<Union extends string, K extends Union> = K;
 export type PropertyKeys<T> = keyof T extends infer K
   ? K extends keyof T
     ? T[K] extends Function
