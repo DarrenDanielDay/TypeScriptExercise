@@ -143,6 +143,9 @@ export type UnPromisefy<T> = T extends Promise<infer R> ? UnPromisefy<R> : T;
 
 export type Callback<Params extends AnyArray> = (...args: Params) => void;
 export type Func<Params extends AnyArray, Result> = (...args: Params) => Result;
+export type TypeGuard<Union, SubSet extends Union> = (
+  obj: Union
+) => obj is SubSet;
 export type Mapper<In, Out> = (param: In) => Out;
 export type Predicate<T> = Mapper<T, boolean>;
 export type Method<This, Params extends AnyArray, Result> = (
@@ -152,3 +155,7 @@ export type Method<This, Params extends AnyArray, Result> = (
 export type MethodsOf<T> = {
   [K in MethodKeys<T>]: Method<T, Parameters<T[K]>, ReturnType<T[K]>>;
 };
+export type Getter<This, T> = Method<This, [], T>;
+export type Setter<This, T> = Method<This, [T], void>;
+export type BindedGetter<This, K extends keyof This> = Getter<This, This[K]>;
+export type BindedSetter<This, K extends keyof This> = Setter<This, This[K]>;

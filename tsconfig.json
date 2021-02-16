@@ -18,7 +18,7 @@
     "target": "ESNext",
     "lib": ["DOM", "ES2019"]
   },
-  "include": ["src", "types"],
+  "include": ["src", "types", "tests"],
   "exclude": ["**/playground.*"],
   "ts-node": {
     "logError": true,

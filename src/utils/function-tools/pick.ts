@@ -10,3 +10,5 @@ export function pick<T, Keys extends (keyof T)[]>(
   }
   return result as never;
 }
+
+export const pickKey = <T>(key: keyof T) => key;

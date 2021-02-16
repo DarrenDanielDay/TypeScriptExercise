@@ -28,10 +28,10 @@ export class GlobalMixinManager {
   constructor(public readonly mixin: Mixins.IGlobalMixin) {
     const globalObj = getGlobal();
     if (!globalObj) {
-      return Internal.error("");
+      return Internal.error("Cannot find global object.");
     }
     this.global = globalObj;
-    this.keysToInject = new Set(Object.keys(mixin));
+    this.keysToInject = new Set();
   }
 
   inject() {
