@@ -107,6 +107,27 @@ export type PrimitiveTypes =
   | symbol
   | bigint;
 
+export interface PrimitiveTypeMapping {
+  string: string;
+  number: number;
+  boolean: boolean;
+  undefined: undefined;
+  null: null;
+  symbol: symbol;
+  bigint: bigint;
+}
+export interface TypeofMapping
+  extends WithoutKey<PrimitiveTypeMapping, "null"> {
+  function: Function;
+  object: object;
+}
+
+export type JSTypes = keyof TypeofMapping;
+export type TypeToJSTypes<T extends PrimitiveTypes | object> = {
+  [K in JSTypes]: T extends TypeofMapping[K] ? K : never;
+}[JSTypes];
+export type GeneralTypes = JSTypes | keyof PrimitiveTypeMapping;
+
 export type ToPrimitive<T extends PrimitiveTypes> = T extends null
   ? null
   : T extends undefined

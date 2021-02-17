@@ -11,12 +11,19 @@ let result = Functools.currying(fn, 1)("", null).a;
 result = Functools.currying(fn, 1, "")(null).a;
 result = Functools.currying(fn)(1)("")(null).a;
 result = Functools.currying(fn)(1)("")(null).a;
+result.toString();
 Functools.currying(fn)(1)("", null).a;
 console.log(Functools.currying(fn));
 console.log(Functools.currying(fn)(1));
 console.log(Functools.currying(fn)(1, ""));
 console.log(Functools.currying(fn)(1, "", null));
-const obj = { a() {}, b(n: number) {}, c: 1 };
+const obj = {
+  a() {},
+  b(n: number) {
+    return n;
+  },
+  c: 1,
+};
 Functools.hubCall([obj, obj, obj], "a");
 Functools.hubCall([obj, obj, obj], "b", 123);
 
