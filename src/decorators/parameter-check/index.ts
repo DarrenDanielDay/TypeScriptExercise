@@ -1,3 +1,4 @@
+import { Internal } from "../..";
 import {
   createClassDecorator,
   createMethodDecorator,
@@ -15,7 +16,7 @@ function onNullCheckFailed(
   key: string | symbol,
   index: number
 ) {
-  console.error(
+  return Internal.error(
     `${
       classObject.name
     }.${key.toString()}  ${index}th parameter is undefined/null.`

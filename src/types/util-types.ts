@@ -106,7 +106,7 @@ export type PrimitiveTypes =
   | null
   | symbol
   | bigint;
-
+export type Nullish = undefined | null;
 export interface PrimitiveTypeMapping {
   string: string;
   number: number;
@@ -121,7 +121,8 @@ export interface TypeofMapping
   function: Function;
   object: object;
 }
-
+export type GeneralObject = Record<string | symbol, unknown>;
+export type TypicalObject = Record<string, unknown>;
 export type JSTypes = keyof TypeofMapping;
 export type TypeToJSTypes<T extends PrimitiveTypes | object> = {
   [K in JSTypes]: T extends TypeofMapping[K] ? K : never;
@@ -156,6 +157,11 @@ export type Mutable<T> = T extends PrimitiveTypes
   : T extends AnyArray
   ? Mutable<ArrayItem<T>>[]
   : { -readonly [K in keyof T]: Mutable<T[K]> };
+
+export type DeepPartial<T> = T extends PrimitiveTypes | AnyArray
+  ? T
+  : { [K in keyof T]?: DeepPartial<T[K]> };
+
 export type ArrayItem<Arr extends AnyArray> = Arr extends readonly (infer T)[]
   ? T
   : never;

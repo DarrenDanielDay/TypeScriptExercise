@@ -10,6 +10,14 @@ export interface Property<Name extends string, Type> {
   type: Type;
 }
 export type JSONPrimitiveTypes = number | string | boolean | null;
+/**
+ * Judge whether the object can be an item of JSON. `undefined` is reguarded as `null`.
+ * @param obj the js object
+ */
+export const isJSONPrimitive = (
+  obj: unknown
+): obj is JSONPrimitiveTypes | undefined =>
+  obj == null || ["number", "string", "boolean"].includes(typeof obj);
 type SchemaItem<T> =
   | NumberSchemaItem
   | StringSchemaItem

@@ -8,11 +8,13 @@ export interface SonInterface extends FatherInterface {
 
 export class FatherClass implements FatherInterface {
   father!: number;
+  // @ts-ignore
   fatherMethod(fatherParam: number) {}
 }
 
 export class SonClass extends FatherClass implements SonInterface {
   son!: string;
+  // @ts-ignore
   sonMethod(sonParam: string) {}
 }
 

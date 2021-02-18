@@ -33,7 +33,6 @@ const upper1: PascalCase<"A"> = "A";
 const empty1: PascalCase<""> = "";
 const digit1: PascalCase<"1"> = "1";
 const digits1: PascalCase<"a123bc"> = "A123Bc";
-
 StaticTypeCheck.assertExpressionAssignable<SnakeCase<"AspNetCore">>(
   "asp_net_core"
 );
@@ -117,3 +116,48 @@ const upper4: KebabCase<"A"> = "a";
 const empty4: KebabCase<""> = "";
 const digit4: KebabCase<"1"> = "1";
 const digits4: KebabCase<"a123bc"> = "a-123-bc";
+
+[
+  AspNetCore1,
+  AspNetCore2,
+  AspNetCore3,
+  AspNetCore4,
+  lower1,
+  upper1,
+  empty1,
+  digit1,
+  digits1,
+];
+[
+  aspNetCore1,
+  aspNetCore2,
+  aspNetCore3,
+  aspNetCore4,
+  lower2,
+  upper2,
+  empty2,
+  digit2,
+  digits2,
+];
+[
+  asp_net_core1,
+  asp_net_core2,
+  asp_net_core3,
+  asp_net_core4,
+  lower3,
+  upper3,
+  empty3,
+  digit3,
+  digits3,
+];
+[
+  KebabCase1,
+  KebabCase2,
+  KebabCase3,
+  KebabCase4,
+  lower4,
+  upper4,
+  empty4,
+  digit4,
+  digits4,
+];

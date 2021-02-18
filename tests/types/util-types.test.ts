@@ -53,14 +53,16 @@ function foo<T, P extends Partial<T>>(
   item: T,
   part: P
 ): UtilTypes.PickOne<T, P> {
-  return null as never;
+  return (!!item && !!part) as never;
 }
-type bar = UtilTypes.PickOne<
-  CommonTestTypes.Foo,
-  {
-    a: string;
-  }
->;
+StaticTypeCheck.assertThat<
+  UtilTypes.PickOne<
+    CommonTestTypes.Foo,
+    {
+      a: string;
+    }
+  >
+>();
 StaticTypeCheck.assertExpressionAssignable<true>(foo({ a: 1, b: 2 }, { a: 1 }));
 
 const constObject = {
@@ -125,12 +127,16 @@ type tuples = UtilTypes.TupleSlices<[string, number]>;
 StaticTypeCheck.assertExpressionAssignable<tuples>([""]);
 StaticTypeCheck.assertExpressionAssignable<tuples>(["", 1]);
 
-function partialParams<P extends tuples>(...args: P) {}
+function partialParams<P extends tuples>(...args: P) {
+  [...args];
+}
 
 partialParams("");
 partialParams("", 1);
 
-function withEmpty(...args: UtilTypes.TupleSlices<[string, number]>) {}
+function withEmpty(...args: UtilTypes.TupleSlices<[string, number]>) {
+  [...args];
+}
 // No hint in vscode.
 withEmpty();
 withEmpty("");

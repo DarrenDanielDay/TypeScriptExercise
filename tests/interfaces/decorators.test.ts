@@ -1,5 +1,8 @@
+import { Internal } from "../../src";
 import { logger, parameters } from "../../src/decorators";
-
+import { consoleMock } from "../../src/globals/mocks/console";
+import { RuntimeCheck } from "../__utils__";
+consoleMock.inject();
 function n(...args: unknown[]) {
   [...args];
 }
@@ -10,7 +13,7 @@ class A {
   @parameters.Checked
   @logger.log
   method(@parameters.NotNull param: unknown) {
-    console.log(param);
+    Internal.info("call method", param);
   }
   @n
   get getter() {
@@ -19,7 +22,7 @@ class A {
 
   @n
   set setter(value: number) {
-    console.log("set", value);
+    Internal.info("set", value);
   }
 
   @n
@@ -31,7 +34,10 @@ class A {
   public definedProp: number = 1;
 }
 
-new A().method(null);
-
-console.log(new A().undefinedProp);
-console.log((new A().undefinedProp = 2));
+RuntimeCheck.assertEqual(new A().undefinedProp, undefined);
+const a = new A();
+RuntimeCheck.assertThrows(a.method.bind(a), null);
+RuntimeCheck.assertNoException(a.method.bind(a), 1);
+a.undefinedProp = 2;
+RuntimeCheck.assertEqual(a.undefinedProp, 2);
+consoleMock.remove();

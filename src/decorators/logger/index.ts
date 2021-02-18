@@ -1,3 +1,4 @@
+import { Internal } from "../..";
 import {
   globalDecoratorContext,
   withContext,
@@ -10,14 +11,14 @@ export const logger = withContext(globalDecoratorContext)
       type: "method",
       hooks: {
         wrapper({ originalFunc, runtimeArgs, keyInfo }) {
-          console.log(
+          Internal.info(
             `${new Date().toLocaleDateString()}`,
             `Call ${
               keyInfo.prototype.constructor.name
             }.${keyInfo.key.toString()}`
           );
           const result = originalFunc.apply(this, runtimeArgs);
-          console.log(
+          Internal.info(
             `${new Date().toLocaleDateString()}`,
             `End of call ${
               keyInfo.prototype.constructor.name

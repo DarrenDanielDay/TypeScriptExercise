@@ -1,22 +1,26 @@
 import * as Logging from "./logging";
 import * as Exception from "./exceptions";
 
-const logger = Logging.consoleLogger;
+let internalLogger = Logging.consoleLogger;
+
+export function useLogger(logger: Logging.ILogging) {
+  internalLogger = logger;
+}
 
 export function warn(message: string, ...args: unknown[]) {
-  logger.warn(message, ...args);
+  internalLogger.warn(message, ...args);
 }
 
 export function info(message: string, ...args: unknown[]) {
-  logger.info(message, ...args);
+  internalLogger.info(message, ...args);
 }
 
 export function error(message: string, ...args: unknown[]) {
-  logger.error(message, ...args);
+  internalLogger.error(message, ...args);
   return Exception.error(message);
 }
 
 export function fatal(message: string, ...args: unknown[]) {
-  logger.fatal(message, ...args);
+  internalLogger.fatal(message, ...args);
   return Exception.error(message);
 }

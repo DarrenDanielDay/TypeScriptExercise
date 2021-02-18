@@ -1,6 +1,6 @@
+// @ts-nocheck
 import { UtilTypes } from "../../src/types";
 import { Compare } from "./test-utils";
-
 export function assertExpressionAssignable<T>(result: T) {}
 export function assertExpressionNotAssignable<T, E>(
   type: T,

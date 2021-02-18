@@ -1,3 +1,5 @@
+import path from "path";
+
 const fs: typeof import("fs/promises") = require("fs").promises;
 const TEST_PATH = "./tests/";
 function toRequire(str: string) {
@@ -11,16 +13,31 @@ function toPath(str: string) {
   return `${TEST_PATH}${str}`;
 }
 
-function requireTheModule(id: string) {
+async function requireTheModule(id: string) {
+  const absolutePath = path.normalize(path.resolve(__dirname, id));
   try {
-    require(id);
-    console.log(`✅passed ${id}`);
+    const testCase = require(id);
+    if (testCase) {
+      const entry: unknown = testCase.main;
+      if (typeof entry === "function") {
+        const promise: unknown = entry.call(undefined);
+        if (promise instanceof Promise) {
+          await promise;
+        }
+      }
+    }
+    console.log(`✅passed ${absolutePath}`);
   } catch (e) {
-    console.error(`❌failed ${id}`);
+    console.error(`❌failed ${absolutePath}`);
     throw e;
   }
 }
 const errorModules: string[] = [];
+
+function isModuleFile(file: string) {
+  return file.endsWith(".test.ts");
+}
+
 async function testModule(requirePath: string) {
   try {
     const stat = await fs.stat(toPath(requirePath));
@@ -31,7 +48,8 @@ async function testModule(requirePath: string) {
         await testModule(moduleName);
       }
     } else {
-      requireTheModule(toRequire(requirePath));
+      if (isModuleFile(requirePath))
+        await requireTheModule(toRequire(requirePath));
     }
   } catch (e) {
     errorModules.push(requirePath);
@@ -41,8 +59,11 @@ async function testModule(requirePath: string) {
 
 async function main() {
   const [ts_node, main_ts, targetModule] = process.argv;
-  console.log([ts_node, main_ts, targetModule]);
-  console.log(`target module: ${targetModule}`);
+  console.log("Test arguments:", [ts_node, main_ts, targetModule]);
+  console.log(`Target module: ${targetModule}`);
+  if (typeof targetModule === "undefined") {
+    console.log("All test cases will be tested.");
+  }
   if (targetModule) {
     await testModule(targetModule);
   } else {

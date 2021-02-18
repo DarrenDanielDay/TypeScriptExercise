@@ -1,5 +1,7 @@
 import { Functools } from "../../src/utils";
-import { Internal } from "../../src";
+import { RuntimeCheck } from "../__utils__";
+import { isFunction } from "../../src/utils/function-tools/type-guards";
+import { assertEqual } from "../__utils__/runtime-check-utils";
 function fn(a: number, b: string, c: null) {
   return {
     a,
@@ -13,10 +15,13 @@ result = Functools.currying(fn)(1)("")(null).a;
 result = Functools.currying(fn)(1)("")(null).a;
 result.toString();
 Functools.currying(fn)(1)("", null).a;
-console.log(Functools.currying(fn));
-console.log(Functools.currying(fn)(1));
-console.log(Functools.currying(fn)(1, ""));
-console.log(Functools.currying(fn)(1, "", null));
+RuntimeCheck.assertThat(Functools.currying(fn) as unknown, isFunction);
+RuntimeCheck.assertThat(Functools.currying(fn)(1) as unknown, isFunction);
+RuntimeCheck.assertThat(Functools.currying(fn)(1, "") as unknown, isFunction);
+RuntimeCheck.assertNotThat(
+  Functools.currying(fn)(1, "", null) as unknown,
+  isFunction
+);
 const obj = {
   a() {},
   b(n: number) {
@@ -34,11 +39,13 @@ Functools.pipe(
   (arr: unknown[]) => arr.length
 ).toFixed();
 
-Functools.pipeAsync(
-  1,
-  (a: number) => a.toFixed(2),
-  (s: string) => s.split("."),
-  (arr: unknown[]) => arr.length
-).then((value) => {
-  Internal.info("value", value);
-});
+export async function main() {
+  return Functools.pipeAsync(
+    1,
+    (a: number) => a.toFixed(2),
+    (s: string) => s.split("."),
+    (arr: unknown[]) => arr.length
+  ).then((value) => {
+    assertEqual(value, 2);
+  });
+}

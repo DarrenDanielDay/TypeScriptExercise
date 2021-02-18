@@ -71,8 +71,8 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.log("err!", e);
+    console.log("❌err!", e);
   })
   .finally(() => {
-    console.log("Generate script done.");
+    console.log("✅Generate script done.");
   });
