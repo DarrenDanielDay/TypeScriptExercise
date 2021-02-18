@@ -116,7 +116,8 @@ export function clone<T>(obj: T, options?: DeepPartial<CloneOptions>): T {
         Object.assign(newDescriptor, descriptor);
         needSet = true;
       }
-      Object.defineProperty(result, key, newDescriptor);
+      Object.prototype.hasOwnProperty.call(result, key) ||
+        Object.defineProperty(result, key, newDescriptor);
       try {
         needSet && ((result as never)[key] = clonedValue as never);
       } catch (e) {

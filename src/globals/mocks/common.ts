@@ -8,7 +8,7 @@ import { SaferAny } from "../../types/util-types";
 import { HubSwitch } from "../../utils/design-patterns";
 import { clone } from "../../utils/function-tools/clone";
 
-export const GLOBAL_MIRROR = clone(getGlobal(), { deep: false })!;
+export const GLOBAL_MIRROR = clone(getGlobal(), { overwrite: true })!;
 
 export class GlobalObjectMock extends GlobalMixinManager {
   protected removedEntries: Map<keyof PotentialGlobal, unknown> = new Map();
