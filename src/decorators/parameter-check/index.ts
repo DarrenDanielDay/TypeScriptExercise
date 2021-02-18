@@ -42,7 +42,7 @@ export const parameters = {
           }
         }
       });
-      return originalFunc.apply(this, runtimeArgs as any[]);
+      return originalFunc.apply(this, runtimeArgs as unknown[]);
     },
   }),
   AllChecked: createClassDecorator(ctx, {

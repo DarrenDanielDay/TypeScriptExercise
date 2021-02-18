@@ -1,6 +1,6 @@
 import { logger, parameters } from "../../src/decorators";
 
-function n(...args: any[]) {
+function n(...args: unknown[]) {
   [...args];
 }
 const key = "someKey".split("").join("");
