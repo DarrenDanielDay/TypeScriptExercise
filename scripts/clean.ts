@@ -14,7 +14,8 @@ async function main() {
   if (args.includes("--git")) {
     await new Promise<void>((resolve, reject) => {
       child_process.exec(
-        "git stash --include-untracked;git stash drop stash@{0};",
+        `git stash --include-untracked
+        git stash drop stash@{0}`,
         (err) => {
           if (err) reject(err);
           resolve();
