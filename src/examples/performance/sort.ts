@@ -1,5 +1,8 @@
 import { randomInt } from "../../utils/algorithms/math/random";
-import { bubbleSort, quickSort } from "../../utils/algorithms/sort";
+import {
+  bubbleSort,
+  quickSort,
+} from "../../utils/algorithms/sort/compare-sort";
 import { timer } from "../../utils/time";
 
 const array: number[] = [];

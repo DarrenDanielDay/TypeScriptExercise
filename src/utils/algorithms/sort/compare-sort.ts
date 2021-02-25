@@ -1,12 +1,16 @@
-import { LinkedQueue } from "../data-structure";
-import { randomInt } from "./math/random";
+import { LinkedQueue } from "../../data-structure";
+import { randomInt } from "../math/random";
+import { CompareFunc, generalCompare } from "./compare-func";
 
-export function bubbleSort(arr: number[]) {
+export function bubbleSort<T>(
+  arr: T[],
+  compare: CompareFunc<T> = generalCompare
+) {
   for (let i = 0; i < arr.length; i++) {
     for (let j = i; j < arr.length; j++) {
       const ai = arr[i]!;
       const aj = arr[j]!;
-      if (ai > aj) {
+      if (compare(ai, aj) < 0) {
         arr[i] = aj;
         arr[j] = ai;
       }
@@ -14,7 +18,10 @@ export function bubbleSort(arr: number[]) {
   }
 }
 
-export function quickSort(arr: number[]) {
+export function quickSort<T>(
+  arr: T[],
+  compare: CompareFunc<T> = generalCompare
+) {
   const queue = LinkedQueue.create<[number, number]>([0, arr.length]);
   function _quickSort([begin, end]: [number, number]) {
     if (begin >= end) return;
@@ -24,9 +31,9 @@ export function quickSort(arr: number[]) {
     arr[begin] = flag;
     let position = begin + 1,
       lowerTail = begin;
-    let temp: number;
+    let temp: T;
     while (position < end) {
-      if (arr[position]! < flag) {
+      if (compare(arr[position]!, flag) < 0) {
         lowerTail++;
         temp = arr[position]!;
         arr[position] = arr[lowerTail]!;
