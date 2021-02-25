@@ -16,6 +16,7 @@ async function* walk(
   callback: (folder: string, fileName: string) => Promise<void>
 ): AsyncGenerator<void, void, unknown> {
   const stat = await fs.stat(dir);
+  if (excludeFolders.includes(path.parse(dir).name)) return;
   if (stat.isFile()) {
     yield await callback(path.dirname(dir), dir);
     return;
@@ -44,7 +45,6 @@ async function ensureFolderCreated(folder: string) {
 
 async function main() {
   for await (let unused of walk(srcFolder, async (folder, fileName) => {
-    if (excludeFolders.includes(folder)) return;
     if (!fileName.includes(extensionName)) return;
     if (excludeFilePatterns.some((p) => p.test(fileName))) return;
     const relative = path.relative(srcFolder, folder);
