@@ -1,13 +1,16 @@
 import { Internal } from "../..";
-import { Func } from "../../types/util-types";
+import { AnyArray, Func } from "../../types/util-types";
 
-export const timer = (
-  callback: Func<unknown[], unknown>,
-  ...args: unknown[]
-) => {
+export function timer<Params extends AnyArray, Result>(
+  title: string,
+  callback: Func<Params, Result>,
+  ...args: Params
+) {
   const start = new Date();
   const result = callback(...args);
   const end = new Date();
-  Internal.info(`Execute time: ${end.getTime() - start.getTime()} ms`);
+  Internal.info(
+    `Execute time for "${title}": ${end.getTime() - start.getTime()} ms`
+  );
   return result;
-};
+}

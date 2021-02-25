@@ -24,13 +24,17 @@ const logToFile: LoggingMethod = (message, ...args) => {
   );
 };
 
+export function setLogFilePath(fileName: string) {
+  logFileName = fileName;
+}
+
 export function fileLog(
   fileName: string,
   level: LoggingLevel,
   message: string,
   ...args: unknown[]
 ) {
-  logFileName = fileName;
+  setLogFilePath(fileName);
   logToFile(`[${level}] ${message}`, ...args);
 }
 

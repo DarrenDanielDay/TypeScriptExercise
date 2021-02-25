@@ -4,7 +4,7 @@ const cwd = process.cwd();
 const srcFolder = path.resolve(cwd, "src");
 const testFolder = path.resolve(cwd, "tests");
 const extensionName = ".ts";
-const excludeFolders = ["docs"];
+const excludeFolders = ["docs", "examples"];
 const excludeFilePatterns = [
   new RegExp(`playground\.*`),
   /main\.ts/,
