@@ -9,6 +9,8 @@
     "clean": "ts-node ./scripts/clean.ts",
     "format": "prettier --write .",
     "gene:test-files": "ts-node ./scripts/gene-test-files.ts",
+    "gene:doc": "typedoc --out command-docs temp",
+    "gene:doc-script": "ts-node --project ./tsconfig.json ./scripts/gene-doc.ts",
     "lint": "prettier --check .",
     "start": "ts-node -p . --files",
     "start:prod": "node ./dist/main.js",
@@ -21,7 +23,8 @@
     "axios": "^0.21.1",
     "core-decorators": "^0.20.0",
     "isomorphic-git": "^1.8.1",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "typedoc": "^0.20.28"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.167",
