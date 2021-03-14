@@ -41,7 +41,11 @@ export function currying<
   } as never;
   fn[$CurryLevel] = restCount(func as never) - args.length;
   return function curry() {
-    return currying.call(undefined, fn, ...((arguments as unknown) as []));
+    return currying.call(
+      undefined,
+      fn as never,
+      ...((arguments as unknown) as [])
+    );
   } as never;
 }
 

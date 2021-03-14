@@ -40,6 +40,7 @@ console.log(`Hello, ${message}!`);
 
 // Use third-party library
 axios.get("https://www.baidu.com");
+
 globalContext.switchOff();
 
 // Decorator utils:
@@ -108,3 +109,8 @@ instance.methodA();
 instance.methodA();
 
 console.log(counter);
+let a = (null as unknown) as undefined | { a: number };
+const b = {
+  ...a,
+};
+console.log("b".repeat(100), b);
