@@ -360,7 +360,7 @@ export function createClassDecorator<
   const decorator: ClassDecorator = function (classObject: Class) {
     onDecorate?.({ context, classObject });
     return rewrite?.({ classObject, context });
-  };
+  } as never;
   return decorator;
 }
 

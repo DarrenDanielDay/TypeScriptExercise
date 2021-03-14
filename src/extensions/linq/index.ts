@@ -17,7 +17,9 @@ function* select<T, R>(this: Iterable<T>, selector: Mapper<T, R>) {
 
 function* where<T>(this: Iterable<T>, predicate: Predicate<T>) {
   for (let item of this) {
-    predicate(item) && (yield item);
+    if (predicate(item)) {
+      yield item;
+    }
   }
 }
 
