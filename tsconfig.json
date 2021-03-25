@@ -11,7 +11,7 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "outDir": "dist",
+    "outDir": "dev-build",
     "sourceMap": true,
     "downlevelIteration": true,
     "module": "CommonJS",

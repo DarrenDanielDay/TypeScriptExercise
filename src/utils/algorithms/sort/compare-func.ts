@@ -13,7 +13,6 @@ export const numberStringCompare: CompareFunc<string> = (a, b) => {
     while ((r = regexp.exec(str)!)) {
       const [total, word, digits] = r;
       lastEnd = r.index + total!.length;
-      console.log(r);
       if (word && digits) {
         result.push([word, parseInt(digits)]);
       }

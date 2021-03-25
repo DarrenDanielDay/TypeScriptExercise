@@ -7,17 +7,27 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.production.json",
     "clean": "ts-node ./scripts/clean.ts",
+    "compile": "tsc",
+    "dev": "yarn watch",
     "format": "prettier --write .",
     "gene:test-files": "ts-node ./scripts/gene-test-files.ts",
-    "gene:doc": "typedoc --out command-docs temp",
+    "gene:doc": "typedoc --out command-docs src",
     "gene:doc-script": "ts-node --project ./tsconfig.json ./scripts/gene-doc.ts",
-    "lint": "prettier --check .",
-    "start": "ts-node -p . --files",
-    "start:prod": "node ./dist/main.js",
+    "go": "yarn && yarn lint",
+    "lint": "yarn lint:style && yarn lint:types",
+    "lint:style": "prettier --check .",
+    "lint:types": "tsc --noEmit",
+    "play": "ts-node --files ./playground.ts",
+    "reset": "yarn && yarn clean --git && yarn",
+    "start": "yarn compile && yarn start:dev",
+    "start:dev": "node ./dev-build/src/main.js",
+    "start:no-compile": "ts-node -p . --files",
+    "start:prod": "node ./build/main.js",
     "test": "ts-node -O \"{ \\\"noUnusedLocals\\\":false, \\\"noUnusedParameters\\\":false }\" ./tests/main.ts",
     "test:types": "yarn test types",
     "test:runtime": "yarn test utils",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "watch:prod": "tsc -w --project ./tsconfig.production.json"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -27,6 +37,7 @@
     "typedoc": "^0.20.28"
   },
   "devDependencies": {
+    "@types/glob": "^7.1.3",
     "@types/lodash": "^4.14.167",
     "@types/node": "^14.14.20",
     "@typescript-eslint/eslint-plugin": "^4.12.0",

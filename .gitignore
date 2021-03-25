@@ -1,5 +1,9 @@
 # For this project
 playground.*
+dev-build
+build
+## TypeDoc generated
+*-docs
 
 # Logs
 logs

@@ -1,21 +1,34 @@
 import child_process from "child_process";
 const fs: typeof import("fs/promises") = require("fs").promises;
-
-const folders = ["./dist", "./node_modules"];
+import path from "path";
+const folders = [
+  "./build",
+  "./dev-build",
+  "./command-docs",
+  "./script-docs",
+  "./node_modules",
+];
 const args = process.argv;
+
+async function forceRemove(folder: string): Promise<void> {
+  return fs.rm(folder, { recursive: true, force: true }).catch((e) => {
+    console.error(`❌ remove ${folder} failed:`, e);
+  });
+}
+
+const toRemove = new Set<string>();
+function collect(p: string) {
+  toRemove.add(path.resolve(p));
+}
+
 async function main() {
-  await Promise.all(
-    folders.map((folder) =>
-      fs.rm(folder, { recursive: true, force: true }).catch((e) => {
-        console.error(`❌ remove ${folder} failed:`, e);
-      })
-    )
-  );
+  folders.map((folder) => collect(folder));
   if (args.includes("--git")) {
     await new Promise<void>((resolve, reject) => {
       child_process.exec(
-        `git stash --include-untracked
-        git stash drop stash@{0}`,
+        `git clean -f
+git stash --include-untracked
+git stash drop stash@{0}`,
         (err) => {
           if (err) reject(err);
           resolve();
@@ -23,9 +36,8 @@ async function main() {
       );
     });
   }
+  await Promise.all([...toRemove].map((p) => forceRemove(p)));
 }
 main().finally(() => {
   console.log("🧹clean script finished.");
 });
-// Convert this script to a module.
-export {};
