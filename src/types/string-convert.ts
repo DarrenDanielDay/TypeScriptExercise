@@ -1,3 +1,5 @@
+import { PrimitiveTypes } from "./util-types";
+
 export type Concat<A extends string, B extends string> = `${A}${B}`;
 export type TripleConcat<
   Head extends string,
@@ -229,3 +231,27 @@ export type CamelCase<Str extends string> = SmallCamelCase<Str>;
 export type KebabCase<Str extends string> = ToLower<
   Join<WordSplit<Str>, Hyphen>
 >;
+
+export type TemplateAllowedTypes =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | bigint;
+
+export type AccessPaths<T> = T extends object
+  ? {
+      [K in keyof T]: [K, ...AccessPaths<T[K]>];
+    }[keyof T]
+  : [];
+
+export type StringAccessKeyOf<T> = T extends PrimitiveTypes
+  ? never
+  : `${Extract<keyof T, TemplateAllowedTypes>}`;
+
+export type StringAccessPaths<T> = T extends object
+  ? {
+      [K in StringAccessKeyOf<T> & keyof T]: [K, ...StringAccessPaths<T[K]>];
+    }[StringAccessKeyOf<T> & keyof T]
+  : [];
