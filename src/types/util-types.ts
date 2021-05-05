@@ -33,6 +33,10 @@ export type NoAny<Tests extends AnyArray, T> = If<
 >;
 
 export type KeyTypes = string | number | symbol;
+export type StandardEnum<T> = {
+  [id: string]: T | string;
+  [nu: number]: string;
+};
 export type SelectKey<Union extends string, K extends Union> = K;
 export type PropertyKeys<T> = keyof T extends infer K
   ? K extends keyof T

@@ -49,7 +49,7 @@ r = d(prototype, key, descriptor of prototype[key]) || r
 redefine prototype[key] with r
 
 2.b property:
-c = 4，target = prototype，desc = undefined
+c = 4, target = prototype, desc = undefined
 r = undefined
 d(prototype, key, undefined)
 NO redefine

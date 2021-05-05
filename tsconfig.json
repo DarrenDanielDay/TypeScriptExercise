@@ -17,7 +17,7 @@
     "module": "CommonJS",
     "target": "ESNext",
     "jsx": "react",
-    "lib": ["DOM", "ES2019"]
+    "lib": ["DOM", "ES2019", "ES2020.BigInt"]
   },
   "include": ["src", "types", "tests"],
   "exclude": ["**/playground.*"],
